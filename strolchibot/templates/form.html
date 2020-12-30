@@ -4,31 +4,16 @@
     <form method="post">
         {% csrf_token %}
         {{ formset.management_form }}
-        <table>
-            <thead>
-            <tr>
-                {% for field in formset.0 %}
-                    <th>
-                        {% if not field.is_hidden %}
-                            {{ field.label }}
-                        {% endif %}
-                    </th>
+        {% for form in formset %}
+            <div class="card">
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    {{ field.errors }}
+                    {{ field }}
                 {% endfor %}
-            </tr>
-            </thead>
-            <tbody>
-            {% for form in formset %}
-                <tr>
-                    {{ form.non_field_errors }}
-                    {% for field in form %}
-                        {{ field.errors }}
-                        <td>{{ field }}</td>
-                    {% endfor %}
-                    <td><i class="fas fa-trash-alt"></i></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                <a href="#" class="strolch-button"><i class="fas fa-trash-alt"></i></a>
+            </div>
+        {% endfor %}
         <input type="submit" value="Add/Save" class="strolch-button">
     </form>
 {% endblock %}
