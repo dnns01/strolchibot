@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <table>
+            <thead>
+            <tr>
+                {% for field in formset.0 %}
+                    <th>
+                        {% if not field.is_hidden %}
+                            {{ field.label }}
+                        {% endif %}
+                    </th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for form in formset %}
+                <tr>
+                    {{ form.non_field_errors }}
+                    {% for field in form %}
+                        {{ field.errors }}
+                        <td>{{ field }}</td>
+                    {% endfor %}
+                    <td><i class="fas fa-trash-alt"></i></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" value="Add/Save" class="strolch-button">
+    </form>
+{% endblock %}

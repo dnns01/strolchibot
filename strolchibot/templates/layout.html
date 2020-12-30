@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <script src="https://kit.fontawesome.com/cdec119da7.js" crossorigin="anonymous"></script>
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            height: 100%;
+            font-family: "Comic Sans MS";
+            background: #e0e0e0;
+        }
+
+        nav {
+            width: 200px;
+            background: #222222;
+            height: 100%;
+            float: left;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        nav li {
+            list-style: none;
+        }
+
+        nav a {
+            display: block;
+            text-decoration: none;
+        }
+
+        nav a:not(.logo) {
+            padding: 15px;
+            color: #e092b8;
+        }
+
+        nav a:hover:not(.logo) {
+            background: #e092b8;
+            color: black;
+        }
+
+        nav a.active {
+            background: #e0e0e0;
+            color: black;
+        }
+
+        #content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+
+        img#logo {
+            width: 200px;
+            height: 200px;
+        }
+
+        nav a.logo {
+            height: 200px;
+            width: 200px;
+        }
+
+        table {
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        td {
+            vertical-align: top;
+        {#padding: .375rem 1rem;#}
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #d2619b;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        input, textarea {
+            display: block;
+            width: 100%;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: .25rem;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            font-family: "Comic Sans MS";
+            resize: none;
+        }
+
+        textarea {
+            width: 500px;
+            height: 250px;
+        }
+
+        .strolch-button {
+            font-family: "Comic Sans MS";
+            background: #e092b8;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 10px;
+        }
+
+        .strolch-button:hover {
+            background: #d2619b;
+        }
+
+
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="{% url 'home' %}" class="logo"><img
+                src="https://static-cdn.jtvnw.net/jtv_user_pictures/803cf7bb-03be-4d1a-a969-66a9da25aa7f-profile_image-300x300.png"
+                id="logo"/></a></li>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'text_commands' %}" {% if title == "Text Commands" %}class="active"{% endif %}>Text
+                Commands</a></li>
+            <li><a href="{% url 'klassenbuch' %}"
+                   {% if title == "Klassenbuch" %}class="active"{% endif %}>Klassenbuch</a></li>
+            <li><a href="{% url 'timers' %}" {% if title == "Timers" %}class="active"{% endif %}>Timers</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+    </ul>
+</nav>
+<div id="content">
+    <h1>{{ title }}</h1>
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>
