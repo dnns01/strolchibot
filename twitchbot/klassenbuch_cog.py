@@ -15,7 +15,7 @@ class KlassenbuchCog:
         else:
             name = ctx.author.name
 
-        conn = sqlite3.connect("../db.sqlite3")
+        conn = sqlite3.connect("db.sqlite3")
         c = conn.cursor()
         c.execute('SELECT sticker from strolchibot_klassenbuch where name = ?', (name,))
         sticker = c.fetchone()
@@ -28,7 +28,7 @@ class KlassenbuchCog:
 
     @commands.command(name="klassenbuch")
     async def cmd_klassenbuch(self, ctx):
-        conn = sqlite3.connect("../db.sqlite3")
+        conn = sqlite3.connect("db.sqlite3")
         c = conn.cursor()
         c.execute('SELECT name, sticker from strolchibot_klassenbuch order by sticker desc')
         klassenbuch = c.fetchall()
