@@ -7,27 +7,33 @@
     <title>{{ title }}</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'images/logo.png' %}">
     <script src="https://kit.fontawesome.com/cdec119da7.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/w3.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
 </head>
-<body>
+<body class="w3-light-gray w3-cursive">
 <nav>
-    <ul>
-        <li><a href="{% url 'home' %}" class="logo"><img src="{% static 'images/logo.png' %}" id="logo"/></a></li>
+    <div class="w3-sidebar w3-bar-block w3-strolchdark ">
+        <a href="{% url 'home' %}" class="logo"><img src="{% static 'images/logo.png' %}" id="logo"/></a>
         {% if user.is_authenticated %}
-            <li><a href="{% url 'text_commands' %}" {% if title == "Text Commands" %}class="active"{% endif %}>Text
-                Commands</a></li>
-            <li><a href="{% url 'klassenbuch' %}"
-                   {% if title == "Klassenbuch" %}class="active"{% endif %}>Klassenbuch</a></li>
-            <li><a href="{% url 'timers' %}" {% if title == "Timers" %}class="active"{% endif %}>Timers</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <a href="{% url 'text_commands' %}"
+               class="w3-bar-item w3-button {% if title == "Text Commands" %}w3-light-gray{% endif %}">Text Commands</a>
+            <a href="{% url 'klassenbuch' %}"
+               class="w3-bar-item w3-button {% if title == "Klassenbuch" %}w3-light-gray{% endif %}">Klassenbuch</a>
+            <a href="{% url 'timers' %}"
+               class="w3-bar-item w3-button {% if title == "Timers" %}w3-light-gray{% endif %}">Timers</a>
+            <a href="{% url 'logout' %}" class="w3-bar-item w3-button">Logout</a>
         {% else %}
-            <li><a href="{% url 'login' %}">Login</a></li>
+            <a href="{% url 'login' %}" class="w3-bar-item w3-button">Login</a>
         {% endif %}
-    </ul>
+    </div>
 </nav>
 <div id="content">
-    <h1>{{ title }}</h1>
-    {% block content %}{% endblock %}
+    <div class="w3-container w3-cursive">
+        <h1 class="w3-cursive">{{ title }}</h1>
+    </div>
+    <div class="w3-container">
+        {% block content %}{% endblock %}
+    </div>
 </div>
 </body>
 </html>

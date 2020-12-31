@@ -4,6 +4,7 @@ from django.forms import modelformset_factory
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from .models import TextCommand, Klassenbuch, Timer
+from .forms import BaseForm
 import os
 import requests
 
@@ -14,7 +15,8 @@ def home(request):
 
 @login_required(login_url="/login")
 def text_commands(request):
-    TextCommandsFormSet = modelformset_factory(TextCommand, fields=('command', 'text'))
+    TextCommandsFormSet = modelformset_factory(TextCommand, form=BaseForm, fields=('command', 'text'),
+                                               field_classes=[''])
     if request.method == "POST":
         formset = TextCommandsFormSet(request.POST, request.FILES)
         if formset.is_valid():
@@ -22,12 +24,20 @@ def text_commands(request):
 
     formset = TextCommandsFormSet()
 
-    return render(request, "form.html", {'title': 'Text Commands', 'formset': formset})
+    return render(request, "form.html",
+                  {'title': 'Text Commands', 'formset': formset, 'remove_url': 'text_commands_remove'})
+
+
+@login_required(login_url="/login")
+def text_commands_remove(request, id):
+    TextCommand.objects.filter(pk=id).delete()
+
+    return redirect("/text_commands")
 
 
 @login_required(login_url="/login")
 def klassenbuch(request):
-    KlassenbuchFormSet = modelformset_factory(Klassenbuch, fields=('name', 'sticker'))
+    KlassenbuchFormSet = modelformset_factory(Klassenbuch, form=BaseForm, fields=('name', 'sticker'))
     if request.method == "POST":
         formset = KlassenbuchFormSet(request.POST, request.FILES)
         if formset.is_valid():
@@ -35,12 +45,20 @@ def klassenbuch(request):
 
     formset = KlassenbuchFormSet()
 
-    return render(request, "form.html", {'title': 'Klassenbuch', 'formset': formset})
+    return render(request, "form.html",
+                  {'title': 'Klassenbuch', 'formset': formset, 'remove_url': 'klassenbuch_remove'})
+
+
+@login_required(login_url="/login")
+def klassenbuch_remove(request, id):
+    Klassenbuch.objects.filter(pk=id).delete()
+
+    return redirect("/klassenbuch")
 
 
 @login_required(login_url="/login")
 def timers(request):
-    TimerFormSet = modelformset_factory(Timer, fields=('text',))
+    TimerFormSet = modelformset_factory(Timer, form=BaseForm, fields=('text',))
     if request.method == "POST":
         formset = TimerFormSet(request.POST, request.FILES)
         if formset.is_valid():
@@ -48,7 +66,14 @@ def timers(request):
 
     formset = TimerFormSet()
 
-    return render(request, "form.html", {'title': 'Timers', 'formset': formset})
+    return render(request, "form.html", {'title': 'Timers', 'formset': formset, 'remove_url': 'timers_remove'})
+
+
+@login_required(login_url="/login")
+def timers_remove(request, id):
+    Timer.objects.filter(pk=id).delete()
+
+    return redirect("/timers")
 
 
 def login(request):

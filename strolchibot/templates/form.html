@@ -5,15 +5,23 @@
         {% csrf_token %}
         {{ formset.management_form }}
         {% for form in formset %}
-            <div class="card">
-                {{ form.non_field_errors }}
-                {% for field in form %}
-                    {{ field.errors }}
-                    {{ field }}
-                {% endfor %}
-                <a href="#" class="strolch-button"><i class="fas fa-trash-alt"></i></a>
+            <div class="w3-card w3-white w3-display-container">
+                <div class="w3-container w3-form-container">
+                    {{ form.non_field_errors }}
+                    {% for field in form %}
+                        <p>
+                            {{ field.errors }}
+                            {{ field }}
+                        </p>
+                    {% endfor %}
+                </div>
+                {% if form.fields.id.initial %}
+                    <div class="w3-display-topright">
+                        <p><a href="{% url remove_url form.fields.id.initial %}" class="w3-button w3-strolchpink"><i class="fas fa-trash-alt"></i></a></p>
+                    </div>
+                {% endif %}
             </div>
         {% endfor %}
-        <input type="submit" value="Add/Save" class="strolch-button">
+        <input type="submit" value="Add/Save" class="w3-button w3-strolchpink w3-block">
     </form>
 {% endblock %}

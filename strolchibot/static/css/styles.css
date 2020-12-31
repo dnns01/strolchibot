@@ -1,118 +1,37 @@
-html, body {
-    margin: 0;
-    height: 100%;
-    font-family: "Comic Sans MS";
-    background: #e0e0e0;
+#content {
+    margin-left: 200px;
 }
 
-nav {
-    width: 200px;
+.w3-strolchdark {
     background: #222222;
-    height: 100%;
-    float: left;
-}
-
-nav ul {
-    margin: 0;
-    padding: 0;
-}
-
-nav li {
-    list-style: none;
-}
-
-nav a {
-    display: block;
-    text-decoration: none;
-}
-
-nav a:not(.logo) {
-    padding: 15px;
     color: #e092b8;
 }
 
-nav a:hover:not(.logo) {
+.w3-strolchpink {
     background: #e092b8;
-    color: black;
 }
 
-nav a.active {
-    background: #e0e0e0;
-    color: black;
+.w3-strolchpink:hover {
+    background: #d2619b!important;
 }
 
-#content {
-    margin-left: 200px;
-    padding: 20px;
+#logo {
+    max-width: 100%;
 }
 
-img#logo {
-    width: 200px;
-    height: 200px;
+.w3-form-container {
+    margin-right: 50px;
 }
 
-nav a.logo {
-    height: 200px;
-    width: 200px;
+.w3-display-topright .w3-button {
+    margin-right: 1em;
 }
 
-table {
-    border-collapse: collapse;
-    text-align: left;
-}
-
-td {
-    vertical-align: top;
-}
-
-tbody tr {
-    border-bottom: 1px solid #d2619b;
-}
-
-tbody tr:last-child {
-    border-bottom: none;
-}
-
-input, textarea {
-    display: block;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-    font-family: "Comic Sans MS";
-    /*resize: none;*/
+.w3-card {
+    margin-bottom: 20px;
 }
 
 textarea {
-    width: 500px;
-    height: 250px;
-}
-
-.strolch-button {
-    font-family: "Comic Sans MS";
-    background: #e092b8;
-    border: none;
-    border-radius: 5px;
-    padding: 6px 10px;
-    color: black;
-}
-
-.strolch-button:hover {
-    background: #d2619b;
-}
-
-.card {
-    background: white;
-    border: 1px solid lightgray;
-    box-shadow: 10px 10px 5px darkgray;
-    margin-bottom: 20px;
+    max-height: 85px;
+    resize: none;
 }

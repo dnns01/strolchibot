@@ -24,7 +24,10 @@ urlpatterns = [
     path('logout/', views.logout, name="logout"),
     path('login/redirect/', views.login_redirect, name="login_redirect"),
     path('text_commands/', views.text_commands, name="text_commands"),
+    path('text_commands/remove/<int:id>', views.text_commands_remove, name="text_commands_remove"),
     path('klassenbuch/', views.klassenbuch, name="klassenbuch"),
+    path('klassenbuch/remove/<int:id>', views.klassenbuch_remove, name="klassenbuch_remove"),
     path('timers/', views.timers, name="timers"),
+    path('timers/remove/<int:id>', views.timers_remove, name="timers_remove"),
     path('strolchguru/', include('strolchguru.urls')),
 ]

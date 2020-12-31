@@ -84,14 +84,20 @@ def is_mod(user, broadcaster):
     })
 
     if response.status_code == 401 and response.json().get("message") == "Invalid OAuth token":
-        refresh_access_token(broadcaster)
+        if not refresh_access_token(broadcaster):
+            return False
         return is_mod(user, broadcaster)
 
     return response.json().get("data") is not None
 
 
 def refresh_access_token(broadcaster):
-    response = requests.post(urlencode(f"https://id.twitch.tv/oauth2/token?grant_type=refresh_token&refresh_token={broadcaster.refresh_token}&client_id={client_id}&client_secret={client_secret})"))
+    url = "https://id.twitch.tv/oauth2/token?" + urlencode({"grant_type": "refresh_token", "refresh_token": broadcaster.refresh_token, "client_id": client_id, "client_secret": client_secret})
+    response = requests.post(url)
+
+    if response.status_code == 400 and response.json().get("message") == "Invalid refresh token":
+        return None
+
     json = response.json()
     access_token = json["access_token"]
     refresh_token = json["refresh_token"]
