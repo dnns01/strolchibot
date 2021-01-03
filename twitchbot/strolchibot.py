@@ -4,6 +4,7 @@ import sqlite3
 from abc import ABC
 from time import sleep, time
 from dotenv import load_dotenv
+import requests
 from twitchio.dataclasses import Context, Message, Channel
 from twitchio.ext import commands
 from giveaway_cog import GiveawayGog
@@ -70,10 +71,21 @@ bot = StrolchiBot()
 
 @bot.command(name="sounds")
 async def cmd_sounds(ctx):
-    await ctx.send(
-        "Kenner*innen fahren folgende Manöver im Chat: 🔊 !achso , !andi , !arbeit , !asozial , !bah , !ban , !bier , !blueprint , !brüller , !channel , !chat , !coden , !content , !dinge , !dumm , !einbauen , !engine , !fail , !fckn , !follow 🔊")
-    await ctx.send(
-        "🔊 !gehtnicht , !geil , !gumo , !gumosuika , !guna , !heyhahaha , !humor , !hä , !indiemüll , !kaputt , !kommafenster , !käffchen , !langweilig , !maul , !mikkel , !naclear , !nenene , !oberscheiße , !opfer , !panne , !pinkler , !prost , !raus , !schödadudabi , !soklappts , !soklapptsnicht , !spiel , !suikasieht , !suikastolz , !teil , !topagent , !tröte , !utz , !wamaduda, !weißnicht , !äther 🔊")
+    response = requests.get("https://api.robotredford.com/v1/command/indiestrolche/sound")
+    sounds = list(dict.fromkeys([command["command"] for command in response.json()]))
+    sounds.sort()
+    print(sounds)
+    answer = f"Kenner*innen fahren folgende Manöver im Chat: 🔊 "
+
+    for sound in sounds:
+        cmd = "!" + sound + ", "
+        if len(answer) + len(cmd) > 500:
+            await ctx.send(answer[:-2] + " 🔊")
+            answer = f"🔊 "
+
+        answer += cmd
+
+    await ctx.send(answer[:-2] + " 🔊")
 
 
 @bot.listen("event_message")
