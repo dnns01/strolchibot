@@ -15,7 +15,7 @@ def home(request):
 
 @login_required(login_url="/login")
 def text_commands(request):
-    TextCommandsFormSet = modelformset_factory(TextCommand, form=BaseForm, fields=('command', 'text'),
+    TextCommandsFormSet = modelformset_factory(TextCommand, form=BaseForm, fields=('command', 'text', 'active'),
                                                field_classes=[''])
     if request.method == "POST":
         formset = TextCommandsFormSet(request.POST, request.FILES)
@@ -58,7 +58,7 @@ def klassenbuch_remove(request, id):
 
 @login_required(login_url="/login")
 def timers(request):
-    TimerFormSet = modelformset_factory(Timer, form=BaseForm, fields=('text',))
+    TimerFormSet = modelformset_factory(Timer, form=BaseForm, fields=('text', 'active'))
     if request.method == "POST":
         formset = TimerFormSet(request.POST, request.FILES)
         if formset.is_valid():

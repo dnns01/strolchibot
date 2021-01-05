@@ -7,6 +7,7 @@ import os
 class TextCommand(models.Model):
     command = models.CharField(max_length=20)
     text = models.TextField(max_length=500)
+    active = models.BooleanField(default=True)
 
 
 class Klassenbuch(models.Model):
@@ -16,6 +17,7 @@ class Klassenbuch(models.Model):
 
 class Timer(models.Model):
     text = models.TextField(max_length=500)
+    active = models.BooleanField(default=True)
 
 
 class TwitchUser(models.Model):

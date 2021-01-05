@@ -12,12 +12,16 @@
                         <p>
                             {{ field.errors }}
                             {{ field }}
+                            {% if field.widget_type == "checkbox" %}
+                                {{ field.label_tag }}
+                            {% endif %}
                         </p>
                     {% endfor %}
                 </div>
                 {% if form.fields.id.initial %}
                     <div class="w3-display-topright">
-                        <p><a href="{% url remove_url form.fields.id.initial %}" class="w3-button w3-strolchpink"><i class="fas fa-trash-alt"></i></a></p>
+                        <p><a href="{% url remove_url form.fields.id.initial %}" class="w3-button w3-strolchpink"><i
+                                class="fas fa-trash-alt"></i></a></p>
                     </div>
                 {% endif %}
             </div>
