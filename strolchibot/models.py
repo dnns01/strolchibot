@@ -20,6 +20,11 @@ class Timer(models.Model):
     active = models.BooleanField(default=True)
 
 
+class Config(models.Model):
+    key = models.CharField(max_length=50)
+    value = models.CharField(max_length=100)
+
+
 class TwitchUser(models.Model):
     objects = TwitchUserManager()
 
@@ -41,3 +46,6 @@ class TwitchUser(models.Model):
             return twitch_api.is_mod(self, broadcaster)
         except TwitchUser.DoesNotExist:
             return False
+
+    def is_admin(self):
+        return self.login.lower() == "strolchibot"

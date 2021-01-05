@@ -11,6 +11,7 @@ from giveaway_cog import GiveawayGog
 from klassenbuch_cog import KlassenbuchCog
 from spotify_cog import SpotifyCog
 from vote_cog import VoteCog
+import config
 
 load_dotenv()
 
@@ -33,6 +34,10 @@ class StrolchiBot(commands.Bot, ABC):
         self.add_cog(VoteCog(self))
         self.add_cog(KlassenbuchCog(self))
         self.add_cog(SpotifyCog(self))
+        print(config.get_value("SPOTIFY_TOKEN"))
+        print(config.get_int("VOTE_DELAY_END"))
+        print(config.get_int("VOTE_DELAY_INTERIM"))
+        print(config.get_int("VOTE_MIN_VOTES"))
 
     @staticmethod
     async def send_me(ctx, content, color):

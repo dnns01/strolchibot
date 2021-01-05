@@ -1,9 +1,9 @@
-from django.http import JsonResponse
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.forms import modelformset_factory
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
-from .models import TextCommand, Klassenbuch, Timer
+from .models import TextCommand, Klassenbuch, Timer, Config
 from .forms import BaseForm
 import os
 import requests
@@ -74,6 +74,32 @@ def timers_remove(request, id):
     Timer.objects.filter(pk=id).delete()
 
     return redirect("/timers")
+
+
+@login_required(login_url="/login")
+def config(request):
+    if request.user.is_admin():
+        ConfigFormSet = modelformset_factory(Config, form=BaseForm, fields=('key', 'value'))
+        if request.method == "POST":
+            formset = ConfigFormSet(request.POST, request.FILES)
+            if formset.is_valid():
+                formset.save()
+
+        formset = ConfigFormSet()
+
+        return render(request, "form.html", {'title': 'Config', 'formset': formset, 'remove_url': 'config_remove'})
+
+    raise Http404
+
+
+@login_required(login_url="/login")
+def config_remove(request, id):
+    if request.user.is_admin():
+        Timer.objects.filter(pk=id).delete()
+
+        return redirect("/config")
+
+    raise Http404
 
 
 def login(request):

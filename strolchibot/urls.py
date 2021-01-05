@@ -29,5 +29,7 @@ urlpatterns = [
     path('klassenbuch/remove/<int:id>', views.klassenbuch_remove, name="klassenbuch_remove"),
     path('timers/', views.timers, name="timers"),
     path('timers/remove/<int:id>', views.timers_remove, name="timers_remove"),
+    path('config/', views.config, name="config"),
+    path('config/remove/<int:id>', views.config_remove, name="config_remove"),
     path('strolchguru/', include('strolchguru.urls')),
 ]
