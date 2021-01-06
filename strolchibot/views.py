@@ -95,7 +95,7 @@ def config(request):
 @login_required(login_url="/login")
 def config_remove(request, id):
     if request.user.is_admin():
-        Timer.objects.filter(pk=id).delete()
+        Config.objects.filter(pk=id).delete()
 
         return redirect("/config")
 

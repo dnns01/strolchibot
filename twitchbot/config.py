@@ -18,3 +18,7 @@ def get_int(key):
 
 def get_float(key):
     return float(get_value(key))
+
+
+def get_bool(key):
+    return get_value(key) == "1"
