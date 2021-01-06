@@ -18,9 +18,9 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.RunSQL(
-            "INSERT INTO strolchibot_config VALUES('LinkProtectionActive', '0')"
+            "INSERT INTO strolchibot_config VALUES((SELECT max(id)+1 FROM strolchibot_config), 'LinkProtectionActive', '0')"
         ),
         migrations.RunSQL(
-            "INSERT INTO strolchibot_config VALUES('LinkProtectionPermitSubs', '0')"
+            "INSERT INTO strolchibot_config VALUES((SELECT max(id)+1 FROM strolchibot_config), 'LinkProtectionPermitSubs', '0')"
         )
     ]
