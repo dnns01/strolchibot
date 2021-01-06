@@ -11,10 +11,16 @@
                     {% for field in form %}
                         <p>
                             {{ field.errors }}
-                            {{ field }}
                             {% if field.widget_type == "checkbox" %}
+                                <label class="switch">
+                                    {{ field }}
+                                    <span class="slider"></span>
+                                </label>
                                 {{ field.label_tag }}
+                            {% else %}
+                                {{ field }}
                             {% endif %}
+
                         </p>
                     {% endfor %}
                 </div>

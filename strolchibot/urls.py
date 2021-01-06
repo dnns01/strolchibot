@@ -31,5 +31,7 @@ urlpatterns = [
     path('timers/remove/<int:id>', views.timers_remove, name="timers_remove"),
     path('config/', views.config, name="config"),
     path('config/remove/<int:id>', views.config_remove, name="config_remove"),
+    path('link_protection/', views.link_protection, name="link_protection"),
+    path('link_protection/remove/<int:id>', views.link_protection_remove, name="link_protection_remove"),
     path('strolchguru/', include('strolchguru.urls')),
 ]

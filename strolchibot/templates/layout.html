@@ -21,6 +21,8 @@
                class="w3-bar-item w3-button {% if title == "Klassenbuch" %}w3-light-gray{% endif %}">Klassenbuch</a>
             <a href="{% url 'timers' %}"
                class="w3-bar-item w3-button {% if title == "Timers" %}w3-light-gray{% endif %}">Timers</a>
+            <a href="{% url 'link_protection' %}"
+               class="w3-bar-item w3-button {% if title == "Link Protection" %}w3-light-gray{% endif %}">Link Protection</a>
             {% if user.is_admin %}
                 <a href="{% url 'config' %}"
                class="w3-bar-item w3-button {% if title == "Config" %}w3-light-gray{% endif %}">Config</a>

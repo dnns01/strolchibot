@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.forms import modelformset_factory
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
-from .models import TextCommand, Klassenbuch, Timer, Config
-from .forms import BaseForm
+from .models import TextCommand, Klassenbuch, Timer, Config, LinkPermit
+from .forms import BaseModelForm, LinkProtectionConfigForm
 import os
 import requests
 
@@ -15,7 +15,7 @@ def home(request):
 
 @login_required(login_url="/login")
 def text_commands(request):
-    TextCommandsFormSet = modelformset_factory(TextCommand, form=BaseForm, fields=('command', 'text', 'active'),
+    TextCommandsFormSet = modelformset_factory(TextCommand, form=BaseModelForm, fields=('command', 'text', 'active'),
                                                field_classes=[''])
     if request.method == "POST":
         formset = TextCommandsFormSet(request.POST, request.FILES)
@@ -24,7 +24,7 @@ def text_commands(request):
 
     formset = TextCommandsFormSet()
 
-    return render(request, "form.html",
+    return render(request, "card_form.html",
                   {'title': 'Text Commands', 'formset': formset, 'remove_url': 'text_commands_remove'})
 
 
@@ -37,7 +37,7 @@ def text_commands_remove(request, id):
 
 @login_required(login_url="/login")
 def klassenbuch(request):
-    KlassenbuchFormSet = modelformset_factory(Klassenbuch, form=BaseForm, fields=('name', 'sticker'))
+    KlassenbuchFormSet = modelformset_factory(Klassenbuch, form=BaseModelForm, fields=('name', 'sticker'))
     if request.method == "POST":
         formset = KlassenbuchFormSet(request.POST, request.FILES)
         if formset.is_valid():
@@ -45,7 +45,7 @@ def klassenbuch(request):
 
     formset = KlassenbuchFormSet()
 
-    return render(request, "form.html",
+    return render(request, "card_form.html",
                   {'title': 'Klassenbuch', 'formset': formset, 'remove_url': 'klassenbuch_remove'})
 
 
@@ -58,7 +58,7 @@ def klassenbuch_remove(request, id):
 
 @login_required(login_url="/login")
 def timers(request):
-    TimerFormSet = modelformset_factory(Timer, form=BaseForm, fields=('text', 'active'))
+    TimerFormSet = modelformset_factory(Timer, form=BaseModelForm, fields=('text', 'active'))
     if request.method == "POST":
         formset = TimerFormSet(request.POST, request.FILES)
         if formset.is_valid():
@@ -66,7 +66,7 @@ def timers(request):
 
     formset = TimerFormSet()
 
-    return render(request, "form.html", {'title': 'Timers', 'formset': formset, 'remove_url': 'timers_remove'})
+    return render(request, "card_form.html", {'title': 'Timers', 'formset': formset, 'remove_url': 'timers_remove'})
 
 
 @login_required(login_url="/login")
@@ -79,7 +79,7 @@ def timers_remove(request, id):
 @login_required(login_url="/login")
 def config(request):
     if request.user.is_admin():
-        ConfigFormSet = modelformset_factory(Config, form=BaseForm, fields=('key', 'value'))
+        ConfigFormSet = modelformset_factory(Config, form=BaseModelForm, fields=('key', 'value'))
         if request.method == "POST":
             formset = ConfigFormSet(request.POST, request.FILES)
             if formset.is_valid():
@@ -87,7 +87,7 @@ def config(request):
 
         formset = ConfigFormSet()
 
-        return render(request, "form.html", {'title': 'Config', 'formset': formset, 'remove_url': 'config_remove'})
+        return render(request, "card_form.html", {'title': 'Config', 'formset': formset, 'remove_url': 'config_remove'})
 
     raise Http404
 
@@ -100,6 +100,32 @@ def config_remove(request, id):
         return redirect("/config")
 
     raise Http404
+
+
+@login_required(login_url="/login")
+def link_protection(request):
+    LinkPermitFormSet = modelformset_factory(LinkPermit, form=BaseModelForm, fields=('nick',))
+    if request.method == "POST":
+        formset = LinkPermitFormSet(request.POST, request.FILES)
+        form = LinkProtectionConfigForm(request.POST)
+        if formset.is_valid():
+            formset.save()
+
+        if form.is_valid():
+            form.save()
+
+    formset = LinkPermitFormSet()
+    form = LinkProtectionConfigForm()
+
+    return render(request, "list_form.html", {'title': 'Link Protection', 'formset': formset, 'form': form, 'remove_url': 'link_protection_remove'})
+
+
+@login_required(login_url="/login")
+def link_protection_remove(request, id):
+    LinkPermit.objects.filter(pk=id).delete()
+
+    return redirect("/link_protection")
+
 
 
 def login(request):

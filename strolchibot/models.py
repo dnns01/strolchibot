@@ -20,6 +20,10 @@ class Timer(models.Model):
     active = models.BooleanField(default=True)
 
 
+class LinkPermit(models.Model):
+    nick = models.CharField(max_length=25)
+
+
 class Config(models.Model):
     key = models.CharField(max_length=50)
     value = models.CharField(max_length=100)
