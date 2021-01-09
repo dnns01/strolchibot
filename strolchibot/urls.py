@@ -36,4 +36,5 @@ urlpatterns = [
     path('link_protection/whitelist/remove/<int:id>', views.link_protection_whitelist_remove, name="link_protection_whitelist_remove"),
     path('link_protection/blacklist/remove/<int:id>', views.link_protection_blacklist_remove, name="link_protection_blacklist_remove"),
     path('strolchguru/', include('strolchguru.urls')),
+    path('twitter/', include('twitter.urls')),
 ]
