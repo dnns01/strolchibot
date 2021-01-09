@@ -13,7 +13,7 @@ def guestbook(request):
         })
 
     response_json = response.json()
-    return JsonResponse([tweet["id"] for tweet in response_json], safe=False)
+    return JsonResponse([tweet["id"] for tweet in response_json["data"]], safe=False)
 
 
 def jojo(request):
