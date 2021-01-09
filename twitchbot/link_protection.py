@@ -17,7 +17,15 @@ class LinkProtection:
 
         # Mods are always allowed to post links. So if we reach this point, the author of the message is not a mod,
         # and we can start checking, whether the message contains a link or not
-        if re.match(".*(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.].*", message.content):
+        if matches := re.findall(r"((?:https?:\/\/)?(?:[\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)(?:[\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?)",
+                                 message.content):
+            for match in matches:
+                print(match)
+                if match == ".":
+                    break
+            else:
+                print("Fertig")
+
             # Reaching this point, we now that the message contains at least one link. Now we can check,
             # if Link Protection is turned on or not. If it is turned off, we don't need further checks, because links
             # are allowed.
@@ -37,7 +45,7 @@ class LinkProtection:
                 return
 
             # Ok, we reached this point! Time for action!!!
-            await message.channel.timeout(message.author.name, 1)
+            # await message.channel.timeout(message.author.name, 1)
 
     def is_user_whitelisted(self, user):
         if self.has_user_permanent_permit(user):

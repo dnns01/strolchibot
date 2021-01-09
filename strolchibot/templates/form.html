@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% if forms|length > 1 %}
+        <div class="w3-row w3-display-container">
+            {% for title, form in forms.items %}
+                <a href="#">
+                    <div id="tablink_{{ title|cut:' ' }}"
+                         class="w3-col s3 l3 m3 tablink w3-bottombar w3-hover-strolchpink w3-padding {% if form.name == active %}active{% endif %}">
+                        {{ title }}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% for title, form in forms.items %}
+        <div class="w3-container form" id="{{ title|cut:' ' }}"
+             style="{% if form.name != active %}display:none; {% endif %}">
+            <form method="post">
+                <input type="hidden" id="id-active" value="{{ form.name }}" name="form-active"/>
+                {% csrf_token %}
+                {% if form.display == "list" %}
+                    {% if form.type == "form" %}
+                        {% include 'list_form.html' %}
+                    {% elif form.type == "formset" %}
+                        {% include 'list_formset.html' %}
+                    {% endif %}
+                {% elif form.display == "card" %}
+                    {% if form.type == "form" %}
+                        {% include 'card_form.html' %}
+                    {% elif form.type == "formset" %}
+                        {% include 'card_formset.html' %}
+                    {% endif %}
+                {% endif %}
+                <input type="submit" value="Add/Save" class="w3-button w3-strolchpink w3-block">
+            </form>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -1,37 +1,20 @@
-{% extends 'layout.html' %}
-
-{% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ formset.management_form }}
-        {% for form in formset %}
-            <div class="w3-card w3-white w3-display-container">
-                <div class="w3-container w3-form-container">
-                    {{ form.non_field_errors }}
-                    {% for field in form %}
-                        <p>
-                            {{ field.errors }}
-                            {% if field.widget_type == "checkbox" %}
-                                <label class="switch">
-                                    {{ field }}
-                                    <span class="slider"></span>
-                                </label>
-                                {{ field.label_tag }}
-                            {% else %}
-                                {{ field }}
-                            {% endif %}
-
-                        </p>
-                    {% endfor %}
-                </div>
-                {% if form.fields.id.initial %}
-                    <div class="w3-display-topright">
-                        <p><a href="{% url remove_url form.fields.id.initial %}" class="w3-button w3-strolchpink"><i
-                                class="fas fa-trash-alt"></i></a></p>
-                    </div>
+<div class="w3-card w3-white w3-display-container">
+    <div class="w3-container w3-form-container">
+        {{ form.form.non_field_errors }}
+        {% for field in form.form %}
+            <p>
+                {{ field.errors }}
+                {% if field.widget_type == "checkbox" %}
+                    <label class="switch">
+                        {{ field }}
+                        <span class="slider"></span>
+                    </label>
+                    {{ field.label_tag }}
+                {% else %}
+                    {{ field.label_tag }}
+                    {{ field }}
                 {% endif %}
-            </div>
+            </p>
         {% endfor %}
-        <input type="submit" value="Add/Save" class="w3-button w3-strolchpink w3-block">
-    </form>
-{% endblock %}
+    </div>
+</div>

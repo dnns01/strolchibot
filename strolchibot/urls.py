@@ -32,6 +32,8 @@ urlpatterns = [
     path('config/', views.config, name="config"),
     path('config/remove/<int:id>', views.config_remove, name="config_remove"),
     path('link_protection/', views.link_protection, name="link_protection"),
-    path('link_protection/remove/<int:id>', views.link_protection_remove, name="link_protection_remove"),
+    path('link_protection/permit/remove/<int:id>', views.link_protection_permit_remove, name="link_protection_permit_remove"),
+    path('link_protection/whitelist/remove/<int:id>', views.link_protection_whitelist_remove, name="link_protection_whitelist_remove"),
+    path('link_protection/blacklist/remove/<int:id>', views.link_protection_blacklist_remove, name="link_protection_blacklist_remove"),
     path('strolchguru/', include('strolchguru.urls')),
 ]

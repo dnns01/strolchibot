@@ -1,63 +1,17 @@
-{% extends 'layout.html' %}
-
-{% block content %}
-    <form method="post">
-        {% csrf_token %}
-
-        {% if form %}
-            <div class="w3-card w3-white w3-display-container">
-                <div class="w3-container w3-form-container">
-                    {{ form.non_field_errors }}
-                    {% for field in form %}
-                        <p>
-                            {{ field.errors }}
-                            {% if field.widget_type == "checkbox" %}
-                                <label class="switch">
-                                    {{ field }}
-                                    <span class="slider"></span>
-                                </label>
-                                {{ field.label_tag }}
-                            {% else %}
-                                {{ field.label_tag }}
-                                {{ field }}
-                            {% endif %}
-                        </p>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-
-        {{ formset.management_form }}
-        <ul class="w3-ul w3-card-4 w3-white">
-            {% for form in formset %}
-                <li class="w3-bar">
-                    <div class="w3-bar-item w3-form-bar-item" style="width: 100%;">
-                        {% if form.fields.id.initial %}
-                            <span class="w3-right">
-                                <a href="{% url remove_url form.fields.id.initial %}" class="w3-button w3-strolchpink">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </span>
-                        {% endif %}
-                        <div class="w3-form-container">
-                            {{ form.non_field_errors }}
-                            {% for field in form %}
-                                {{ field.errors }}
-                                {% if field.widget_type == "checkbox" %}
-                                    <label class="switch">
-                                        {{ field }}
-                                        <span class="slider"></span>
-                                    </label>
-                                    {{ field.label_tag }}
-                                {% else %}
-                                    {{ field }}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-        <input type="submit" value="Add/Save" class="w3-button w3-strolchpink w3-block">
-    </form>
-{% endblock %}
+<ul class="w3-ul w3-card-4 w3-white">
+    {{ form.form.non_field_errors }}
+    {% for field in form.form %}
+        <li class="w3-bar">
+            {{ field.errors }}
+            {% if field.widget_type == "checkbox" %}
+                <label class="switch">
+                    {{ field }}
+                    <span class="slider"></span>
+                </label>
+                {{ field.label_tag }}
+            {% else %}
+                {{ field }}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

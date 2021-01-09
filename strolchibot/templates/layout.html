@@ -6,32 +6,13 @@
     <meta charset="UTF-8">
     <title>{{ title }}</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'images/logo.png' %}">
-    <script src="https://kit.fontawesome.com/cdec119da7.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/w3.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
 </head>
 <body class="w3-light-gray w3-cursive">
 <nav>
-    <div class="w3-sidebar w3-bar-block w3-strolchdark ">
-        <a href="{% url 'home' %}" class="logo"><img src="{% static 'images/logo.png' %}" id="logo"/></a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'text_commands' %}"
-               class="w3-bar-item w3-button {% if title == "Text Commands" %}w3-light-gray{% endif %}">Text Commands</a>
-            <a href="{% url 'klassenbuch' %}"
-               class="w3-bar-item w3-button {% if title == "Klassenbuch" %}w3-light-gray{% endif %}">Klassenbuch</a>
-            <a href="{% url 'timers' %}"
-               class="w3-bar-item w3-button {% if title == "Timers" %}w3-light-gray{% endif %}">Timers</a>
-            <a href="{% url 'link_protection' %}"
-               class="w3-bar-item w3-button {% if title == "Link Protection" %}w3-light-gray{% endif %}">Link Protection</a>
-            {% if user.is_admin %}
-                <a href="{% url 'config' %}"
-               class="w3-bar-item w3-button {% if title == "Config" %}w3-light-gray{% endif %}">Config</a>
-            {% endif %}
-            <a href="{% url 'logout' %}" class="w3-bar-item w3-button">Logout</a>
-        {% else %}
-            <a href="{% url 'login' %}" class="w3-bar-item w3-button">Login</a>
-        {% endif %}
-    </div>
+{% include 'navigation.html' %}
 </nav>
 <div id="content">
     <div class="w3-container w3-cursive">
@@ -41,5 +22,6 @@
         {% block content %}{% endblock %}
     </div>
 </div>
+<script src="{% static 'js/scripts.js' %}"></script>
 </body>
 </html>

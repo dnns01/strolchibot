@@ -15,6 +15,10 @@
     background: #d2619b!important;
 }
 
+.w3-hover-strolchpink:hover, .w3-hover-strolchpink.active {
+    background: #e092b8!important;
+}
+
 #logo {
     max-width: 100%;
 }
@@ -93,4 +97,16 @@ input:checked + .slider:before {
   -webkit-transform: translateX(17.5px);
   -ms-transform: translateX(17.5px);
   transform: translateX(17.5px);
+}
+
+.w3-bottombar {
+    border-bottom: 6px solid #d2619b !important;
+}
+
+.w3-container.form {
+    padding: 0;
+}
+
+.tablink {
+    text-align: center;
 }
