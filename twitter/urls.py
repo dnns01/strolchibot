@@ -20,5 +20,5 @@ from . import views
 
 urlpatterns = [
     path('guestbook/', views.guestbook, name="guestbook"),
-    path('guestbook/json', views.guestbook_json, name="guestbook_json"),
+    path('jojo', views.jojo, name="jojo"),
 ]

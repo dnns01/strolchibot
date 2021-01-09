@@ -6,26 +6,25 @@ import os
 
 # Create your views here.
 def guestbook(request):
-    return render(request, "guestbook.html", context={"tweets": get_guestbook_tweets()})
-
-
-def guestbook_json(request):
-    return JsonResponse(get_guestbook_tweets())
-
-
-def get_guestbook_tweets():
-    tweets = {}
     response = requests.get(
-        "https://api.twitter.com/2/tweets/search/recent?query=%23StrolchGäBu%20%23StrolchGast&user.fields=name&expansions=author_id&max_results=100&tweet.fields=created_at",
+        "https://api.twitter.com/2/tweets/search/recent?query=%23StrolchGäBu%20%23StrolchGast&max_results=100",
         headers={
             'Authorization': f'Bearer {os.getenv("TWITTER_TOKEN")}'
         })
 
     response_json = response.json()
-    users = {user["id"]: user["name"] for user in response_json["includes"]["users"]}
+    return JsonResponse([tweet["id"] for tweet in response_json], safe=False)
 
-    for tweet in response_json["data"]:
-        tweets[tweet["id"]] = {"author": users[tweet["author_id"]], "text": tweet["text"],
-                               "created_at": tweet["created_at"]}
 
-    return tweets
+def jojo(request):
+    response = requests.get(
+        "https://api.twitter.com/2/users/1279020408050761730/tweets?max_results=100",
+        headers={
+            'Authorization': f'Bearer {os.getenv("TWITTER_TOKEN")}'
+        })
+
+    response_json = response.json()
+    return JsonResponse(response_json)
+
+
+
