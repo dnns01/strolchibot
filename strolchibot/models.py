@@ -54,7 +54,7 @@ class TwitchUser(models.Model):
 
     @property
     def is_authenticated(self):
-        broadcaster_id = os.getenv("BROADCASTER_ID")
+        broadcaster_id = int(os.getenv("BROADCASTER_ID"))
         if self.id == broadcaster_id or self.admin:
             return True
         try:

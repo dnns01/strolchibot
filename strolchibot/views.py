@@ -164,14 +164,14 @@ def link_protection(request):
             'type': 'formset',
             'name': 'whitelist',
             'formset': LinkWhitelistFormSet(),
-            'remove_url': 'link_protection_permit_remove',
+            'remove_url': 'link_protection_whitelist_remove',
         },
         "Blacklist": {
             'display': 'list',
             'type': 'formset',
             'name': 'blacklist',
             'formset': LinkBlacklistFormSet(),
-            'remove_url': 'link_protection_permit_remove',
+            'remove_url': 'link_protection_blacklist_remove',
         },
     }
 
