@@ -35,12 +35,13 @@ class LinkProtection:
         return False
 
     async def event_message(self, message):
-        if message.author.is_mod:
-            return
+        # if message.author.is_mod:
+        #     return
 
         # Mods are always allowed to post links. So if we reach this point, the author of the message is not a mod,
         # and we can start checking, whether the message contains a link or not
-        if links := re.findall(r"(?:https?:\/\/)?([a-zA-Z0-9_-]+\.[a-z]{2,}[a-zA-Z0-9?&=_\/-]*)", message.content):
+        if links := re.findall(r"(?:https?:\/\/)?((?:[a-zA-Z0-9_-]+\.)+[a-z]{2,}[a-zA-Z0-9?&=_\/-]*)", message.content):
+            print(links)
             for link in links:
                 if self.lookup_blacklist(link):
                     await message.channel.timeout(message.author.name, 1)
