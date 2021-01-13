@@ -3,7 +3,6 @@ import config
 import re
 import sqlite3
 from datetime import datetime, timedelta
-import random
 
 
 @commands.core.cog(name="LinkProtection")
@@ -12,37 +11,28 @@ class LinkProtection:
         self.bot = bot
         self.permit = {}
 
-    def get_links(self, message):
-        links = []
-        if matches := re.findall(r"(?:https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)(?:[\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?",
-                   message):
-            print("Matches:", matches)
-            for match in matches:
-                if not re.match(r"^\.+$", match) and "." in match:
-                    print("Jo... ")
-                    links.append(match)
-
-            if len(links) > 0:
-                return links
-
-        return None
-
     def lookup_blacklist(self, link):
         conn = sqlite3.connect("db.sqlite3")
         c = conn.cursor()
-        c.execute('SELECT url from strolchibot_linkblacklist where url like ? or url like ?', ("http://" + link, "https://" + link,))
-        link = c.fetchone()
+        c.execute('SELECT url from strolchibot_linkblacklist')
+        urls = c.fetchall()
         conn.close()
-        return link is not None
+        return self.is_listed(link, [url[0] for url in urls])
 
     def lookup_whitelist(self, link):
         conn = sqlite3.connect("db.sqlite3")
         c = conn.cursor()
-        c.execute('SELECT url from strolchibot_linkwhitelist where url like ? or url like ?', ("http://" + link, "https://" + link,))
-        link = c.fetchone()
+        c.execute('SELECT url from strolchibot_linkwhitelist')
+        urls = c.fetchall()
         conn.close()
-        return link is not None
+        return self.is_listed(link, [url[0] for url in urls])
 
+    def is_listed(self, link, urls):
+        for url in urls:
+            if link.startswith(url.split("://")[1]):
+                return True
+
+        return False
 
     async def event_message(self, message):
         if message.author.is_mod:
@@ -50,18 +40,14 @@ class LinkProtection:
 
         # Mods are always allowed to post links. So if we reach this point, the author of the message is not a mod,
         # and we can start checking, whether the message contains a link or not
-        if links := self.get_links(message.content):
-            print(message.content, message.author, links)
+        if links := re.findall(r"(?:https?:\/\/)?([a-zA-Z0-9_-]+\.[a-z]{2,}[a-zA-Z0-9?&=_\/-]*)", message.content):
             for link in links:
-                print(link)
                 if self.lookup_blacklist(link):
-                    print("Sorry bro, aber der Link geht ja mal gar nicht... nicht mal für nen Sub oder jemand mit Permit.... ")
                     await message.channel.timeout(message.author.name, 1)
                     return
 
             for link in links:
                 if self.lookup_whitelist(link):
-                    print("Geil, dein Link steht auf der Whitelist.")
                     return
 
             # Reaching this point, we now that the message contains at least one link. Now we can check,
