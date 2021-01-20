@@ -3,16 +3,17 @@ import random
 import sqlite3
 from abc import ABC
 from time import sleep, time
-from dotenv import load_dotenv
+
 import requests
-from twitchio.dataclasses import Context, Message, Channel
-from twitchio.ext import commands
+from armin import Armin
+from dotenv import load_dotenv
 from giveaway_cog import GiveawayGog
 from klassenbuch_cog import KlassenbuchCog
-from spotify_cog import SpotifyCog
-from vote_cog import VoteCog
 from link_protection import LinkProtection
-import config
+from spotify_cog import SpotifyCog
+from twitchio.dataclasses import Context, Message, Channel
+from twitchio.ext import commands
+from vote_cog import VoteCog
 
 load_dotenv()
 
@@ -36,6 +37,7 @@ class StrolchiBot(commands.Bot, ABC):
         self.add_cog(KlassenbuchCog(self))
         self.add_cog(SpotifyCog(self))
         self.add_cog(LinkProtection(self))
+        self.add_cog(Armin(self))
 
 
     @staticmethod
