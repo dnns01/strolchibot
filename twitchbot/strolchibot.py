@@ -7,9 +7,10 @@ from time import sleep, time
 import requests
 from armin import Armin
 from dotenv import load_dotenv
-from giveaway_cog import GiveawayGog
+from giveaway import Giveaway
 from klassenbuch_cog import KlassenbuchCog
 from link_protection import LinkProtection
+from scarecounter import ScareCounter
 from spotify_cog import SpotifyCog
 from twitchio.dataclasses import Context, Message, Channel
 from twitchio.ext import commands
@@ -32,12 +33,13 @@ class StrolchiBot(commands.Bot, ABC):
         self.last_bati = 0
         super().__init__(irc_token=self.IRC_TOKEN, prefix=self.PREFIX, nick=self.NICK, initial_channels=[self.CHANNEL],
                          client_id=self.CLIENT_ID, client_secret=self.CLIENT_SECRET)
-        self.add_cog(GiveawayGog(self))
         self.add_cog(VoteCog(self))
         self.add_cog(KlassenbuchCog(self))
         self.add_cog(SpotifyCog(self))
         self.add_cog(LinkProtection(self))
         self.add_cog(Armin(self))
+        self.add_cog(ScareCounter(self))
+        self.add_cog(Giveaway(self))
 
 
     @staticmethod
