@@ -26,7 +26,7 @@ class Giveaway:
                 self.giveaway_enabled = True
                 self.giveaway_entries = {}
                 await self.bot.send_me(ctx,
-                                       "Das Giveaway wurde gestartet. Schreibe !giveaway in den Chat um daran teilzunehmen.",
+                                       "Das Giveaway wurde gestartet. Schreibe !gierig in den Chat um daran teilzunehmen.",
                                        "YellowGreen")
             elif param == "close":
                 self.giveaway_enabled = False
