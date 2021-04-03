@@ -41,7 +41,6 @@ class StrolchiBot(commands.Bot, ABC):
         self.add_cog(ScareCounter(self))
         self.add_cog(Giveaway(self))
 
-
     @staticmethod
     async def send_me(ctx, content, color):
         """ Change Text color to color and send content as message """
@@ -52,6 +51,10 @@ class StrolchiBot(commands.Bot, ABC):
         elif type(ctx) is Message:
             await ctx.channel.color(color)
             await ctx.channel.send_me(content)
+
+    @staticmethod
+    def is_subscriber(user):
+        return user.badges.get("founder") is not None or user.badges.get("subscriber") is not None
 
     async def event_ready(self):
         print('Logged in')

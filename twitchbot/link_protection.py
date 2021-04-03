@@ -1,8 +1,9 @@
-from twitchio.ext import commands
-import config
 import re
 import sqlite3
 from datetime import datetime, timedelta
+
+import config
+from twitchio.ext import commands
 
 
 @commands.core.cog(name="LinkProtection")
@@ -35,8 +36,8 @@ class LinkProtection:
         return False
 
     async def event_message(self, message):
-        # if message.author.is_mod:
-        #     return
+        if message.author.is_mod:
+            return
 
         # Mods are always allowed to post links. So if we reach this point, the author of the message is not a mod,
         # and we can start checking, whether the message contains a link or not
@@ -60,7 +61,7 @@ class LinkProtection:
             # Reaching this point means, that the message contains a link, the author is not a mod and Link Protection
             # is turned on. Next step is to check, if Subs are permitted to post links and if the author of the message
             # is a sub. If true, no further processing neccessary, posting a link is allowed.
-            if message.author.is_subscriber and config.get_bool("LinkProtectionPermitSubs"):
+            if self.bot.is_subscriber(message.author) and config.get_bool("LinkProtectionPermitSubs"):
                 return
 
             # Reaching this point means, the author is not a mod, the message contains a link and links protection is
