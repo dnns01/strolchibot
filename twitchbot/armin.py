@@ -9,7 +9,7 @@ from twitchio.ext import commands
 class Armin:
     def __init__(self, bot):
         self.bot = bot
-        self.a = ["ein-", "zwei-", "drei-", "vier-", "fünf", "sechs-"]
+        self.a = ["ein", "zwei", "drei", "vier", "fünf", "sechs"]
         self.b = ["tägige", "wöchige", "monatige", "fache", "malige", "hebige"]
         self.c = ["harte", "softe", "optionale", "intranspatente", "alternativlose", "unumkehrbare"]
         self.d = ["Wellenbrecher-", "Brücken-", "Treppen-", "Wende-", "Impf-", "Ehren-"]
