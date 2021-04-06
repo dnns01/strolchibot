@@ -21,6 +21,7 @@ class Armin:
         self.h = ["Senkung", "Steigerung", "Beendigung", "Halbierung", "Vernichtung", "Beschönigung"]
         self.i = ["Infektionszahlen", "privaten Treffen", "Wirtschaftsleistung", "Wahlprognosen", "dritten Welle",
                   "Bundeskanzlerin"]
+        self.arminsagt_cooldown = datetime.now()
 
     @commands.command(name="armin")
     async def cmd_armin(self, ctx):
@@ -53,9 +54,13 @@ class Armin:
 
     @commands.command(name="arminsagt")
     async def cmd_arminsagt(self, ctx):
-        rNum = random.randint(0, 5)
-        n = "n" if rNum not in [2, 3, 5] else ""
-        await ctx.send(f"Was wir jetzt brauchen, ist eine{n} {random.choice(self.a)}{random.choice(self.b)}{n} "
-                       f"{random.choice(self.c)}{n} {random.choice(self.d)}{self.e[rNum]} "
-                       f"bis {random.choice(self.f)} zur {random.choice(self.g)} {random.choice(self.h)} "
-                       f"der {random.choice(self.i)}.")
+        if datetime.now() > self.arminsagt_cooldown:
+            self.arminsagt_cooldown = datetime.now() + timedelta(minutes=1)
+            rNum = random.randint(0, 5)
+            n = "n" if rNum not in [2, 3, 5] else ""
+            await ctx.send(f"Was wir jetzt brauchen, ist eine{n} {random.choice(self.a)}{random.choice(self.b)}{n} "
+                           f"{random.choice(self.c)}{n} {random.choice(self.d)}{self.e[rNum]} "
+                           f"bis {random.choice(self.f)} zur {random.choice(self.g)} {random.choice(self.h)} "
+                           f"der {random.choice(self.i)}.")
+        else:
+            await ctx.send("Sorry, aber Armin denkt noch nach...")
