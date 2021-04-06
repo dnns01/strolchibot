@@ -10,8 +10,8 @@ class Armin:
     def __init__(self, bot):
         self.bot = bot
         self.a = ["ein-", "zwei-", "drei-", "vier-", "fünf", "sechs-"]
-        self.b = ["tägige/n", "wöchige/n", "monatige/n", "fache/n", "malige/n", "hebige/n"]
-        self.c = ["harte/n", "softe/n", "optionale/n", "intranspatente/n", "alternativlose/n", "unumkehrbare/n"]
+        self.b = ["tägige", "wöchige", "monatige", "fache", "malige", "hebige"]
+        self.c = ["harte", "softe", "optionale", "intranspatente", "alternativlose", "unumkehrbare"]
         self.d = ["Wellenbrecher-", "Brücken-", "Treppen-", "Wende-", "Impf-", "Ehren-"]
         self.e = ["Lockdown", "Stopp", "Maßnahme", "Kampagne", "Sprint", "Matrix"]
         self.f = ["zum Sommer", "auf Weiteres", "zur Bundestagswahl", "2030", "nach den Apiturprüfungen",
@@ -53,7 +53,9 @@ class Armin:
 
     @commands.command(name="arminsagt")
     async def cmd_arminsagt(self, ctx):
-        await ctx.send(f"Was wir jetzt brauchen, ist ein/e {random.choice(self.a)}{random.choice(self.b)} "
-                       f"{random.choice(self.c)} {random.choice(self.d)}{random.choice(self.e)} "
+        rNum = random.randint(0, 5)
+        n = "n" if rNum not in [2, 3, 5] else ""
+        await ctx.send(f"Was wir jetzt brauchen, ist eine{n} {random.choice(self.a)}{random.choice(self.b)}{n} "
+                       f"{random.choice(self.c)}{n} {random.choice(self.d)}{self.e[rNum]} "
                        f"bis {random.choice(self.f)} zur {random.choice(self.g)} {random.choice(self.h)} "
                        f"der {random.choice(self.i)}.")
