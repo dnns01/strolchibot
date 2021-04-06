@@ -14,7 +14,7 @@ class Armin:
         self.c = ["harte", "softe", "optionale", "intranspatente", "alternativlose", "unumkehrbare"]
         self.d = ["Wellenbrecher-", "Brücken-", "Treppen-", "Wende-", "Impf-", "Ehren-"]
         self.e = ["Lockdown", "Stopp", "Maßnahme", "Kampagne", "Sprint", "Matrix"]
-        self.f = ["zum Sommer", "auf Weiteres", "zur Bundestagswahl", "2030", "nach den Apiturprüfungen",
+        self.f = ["zum Sommer", "auf Weiteres", "zur Bundestagswahl", "2030", "nach den Abiturprüfungen",
                   "in die Puppen"]
         self.g = ["sofortigen", "nachhaltigen", "allmählichen", "unausweichlichen", "wirtschaftsschonenden",
                   "willkürlichen"]
