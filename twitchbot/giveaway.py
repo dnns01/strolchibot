@@ -14,8 +14,13 @@ class Giveaway:
     async def cmd_giveaway(self, ctx):
         """ take part at the giveaway """
 
+        texts = [f"{ctx.author.name} ist ein gieriger Gierlappen!", f"Geil!!! {ctx.author.name} giert hart rein!",
+                 f"So klappt es doch {ctx.author.name}! Einmal hart reingieren."]
+
         if self.giveaway_enabled:
-            self.giveaway_entries[ctx.author.name] = 1
+            if self.giveaway_entries.get(ctx.author.name) != 1:
+                await self.bot.send_me(ctx, random.choice(texts), "YellowGreen")
+                self.giveaway_entries[ctx.author.name] = 1
 
     @commands.command(name="giveaway")
     async def cmd_giveaway_open(self, ctx, param):

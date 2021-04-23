@@ -76,7 +76,7 @@ class LinkProtection:
     def is_user_whitelisted(self, user):
         if self.has_user_permanent_permit(user):
             return True
-        elif until := self.permit.get(user.name):
+        elif until := self.permit.get(user.name.lower()):
             return until >= datetime.now()
         else:
             return False
