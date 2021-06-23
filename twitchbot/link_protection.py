@@ -2,8 +2,9 @@ import re
 import sqlite3
 from datetime import datetime, timedelta
 
-import config
 from twitchio.ext import commands
+
+import config
 
 
 @commands.core.cog(name="LinkProtection")
@@ -103,6 +104,8 @@ class LinkProtection:
     async def cmd_permit(self, ctx, user, permanent=None):
         if user[0] == "@":
             user = user[1:]
+
+        user = user.lower()
 
         if ctx.author.is_mod:
             if permanent:

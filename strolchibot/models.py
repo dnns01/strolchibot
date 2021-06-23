@@ -9,6 +9,11 @@ class TextCommand(models.Model):
     text = models.TextField(max_length=500)
     active = models.BooleanField(default=True)
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.command[0] == "!":
+            self.command = self.command[1:]
+        super().save(force_insert, force_update, using, update_fields)
+
 
 class Klassenbuch(models.Model):
     name = models.CharField(max_length=50)
@@ -22,6 +27,10 @@ class Timer(models.Model):
 
 class LinkPermit(models.Model):
     nick = models.CharField(max_length=25)
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.nick = self.nick.lower()
+        super().save(force_insert, force_update, using, update_fields)
 
 
 class LinkWhitelist(models.Model):
