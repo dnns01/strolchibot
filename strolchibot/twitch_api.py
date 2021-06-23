@@ -1,6 +1,7 @@
-import requests
 import os
 from datetime import datetime
+
+import requests
 from django.utils.http import urlencode
 
 token_url = "https://id.twitch.tv/oauth2/token?client_id={0}&client_secret={1}&grant_type=client_credentials"
@@ -59,7 +60,8 @@ def get_clips(cursor=None, all_clips=False, today=False):
         for clip in data:
             if thumbnail_url := clip.get("thumbnail_url"):
                 clip_url = thumbnail_url.split("-preview-")[0] + ".mp4"
-                clips.append(clip_url)
+                clip["clip_url"] = clip_url
+                clips.append(clip)
 
     if all_clips:
         if pagination := clips_json.get("pagination"):
