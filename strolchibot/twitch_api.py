@@ -77,21 +77,28 @@ def get_date():
 
 
 def is_mod(user, broadcaster):
-    response = requests.get(f"https://api.twitch.tv/helix/moderation/moderators?broadcaster_id={broadcaster.id}&user_id={user.id}", headers={
-        'Authorization': f'Bearer {broadcaster.access_token}',
-        'Client-Id': client_id
-    })
+    response = requests.get(
+        f"https://api.twitch.tv/helix/moderation/moderators?broadcaster_id={broadcaster.id}&user_id={user.id}",
+        headers={
+            'Authorization': f'Bearer {broadcaster.access_token}',
+            'Client-Id': client_id
+        })
 
     if response.status_code == 401 and response.json().get("message") == "Invalid OAuth token":
         if not refresh_access_token(broadcaster):
             return False
         return is_mod(user, broadcaster)
 
-    return response.json().get("data") is not None
+    if data := response.json().get("data"):
+        return len(data) > 0
+    else:
+        return False
 
 
 def refresh_access_token(broadcaster):
-    url = "https://id.twitch.tv/oauth2/token?" + urlencode({"grant_type": "refresh_token", "refresh_token": broadcaster.refresh_token, "client_id": client_id, "client_secret": client_secret})
+    url = "https://id.twitch.tv/oauth2/token?" + urlencode(
+        {"grant_type": "refresh_token", "refresh_token": broadcaster.refresh_token, "client_id": client_id,
+         "client_secret": client_secret})
     response = requests.post(url)
 
     if response.status_code == 400 and response.json().get("message") == "Invalid refresh token":
