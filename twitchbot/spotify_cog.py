@@ -36,7 +36,7 @@ class SpotifyCog(commands.Cog):
 
         else:
             await ctx.send(
-                "Ich würde ja gerne sagen, welcher kultige Song gerade läuft. Leider hat mir noch keiner gesagt, wer eigentlich gerade streamt strolchSauer")
+                "Ich würde ja gerne sagen, welcher kultige Song gerade läuft. Leider hat mir noch keiner gesagt, wer eigentlich gerade streamt strolchWut")
 
     def get_song(self):
         response = requests.get("https://api.spotify.com/v1/me/player", headers={
