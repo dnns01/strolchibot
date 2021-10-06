@@ -5,15 +5,17 @@ from abc import ABC
 from time import sleep, time
 
 import requests
-from armin import Armin
 from dotenv import load_dotenv
+from twitchio import Channel, Message
+from twitchio.ext import commands
+from twitchio.ext.commands import Context
+
+from armin import Armin
 from giveaway import Giveaway
 from klassenbuch_cog import KlassenbuchCog
 from link_protection import LinkProtection
 from scarecounter import ScareCounter
 from spotify_cog import SpotifyCog
-from twitchio.dataclasses import Context, Message, Channel
-from twitchio.ext import commands
 from vote_cog import VoteCog
 
 load_dotenv()
@@ -31,7 +33,7 @@ class StrolchiBot(commands.Bot, ABC):
         self.BATI_KAPPA_PROBABILITY = float(os.getenv("BATI_KAPPA_PROBABILITY"))
         self.BATI_DELAY = int(os.getenv("BATI_DELAY"))
         self.last_bati = 0
-        super().__init__(irc_token=self.IRC_TOKEN, prefix=self.PREFIX, nick=self.NICK, initial_channels=[self.CHANNEL],
+        super().__init__(token=self.IRC_TOKEN, prefix=self.PREFIX, nick=self.NICK, initial_channels=[self.CHANNEL],
                          client_id=self.CLIENT_ID, client_secret=self.CLIENT_SECRET)
         self.add_cog(VoteCog(self))
         self.add_cog(KlassenbuchCog(self))
@@ -42,15 +44,13 @@ class StrolchiBot(commands.Bot, ABC):
         self.add_cog(Giveaway(self))
 
     @staticmethod
-    async def send_me(ctx, content, color):
+    async def send_me(ctx, content):
         """ Change Text color to color and send content as message """
 
         if type(ctx) is Context or type(ctx) is Channel:
-            await ctx.color(color)
-            await ctx.send_me(content)
+            await ctx.send(f".me {content}")
         elif type(ctx) is Message:
-            await ctx.channel.color(color)
-            await ctx.channel.send_me(content)
+            await ctx.channel.send(f".me {content}")
 
     @staticmethod
     def is_subscriber(user):
@@ -58,6 +58,9 @@ class StrolchiBot(commands.Bot, ABC):
 
     async def event_ready(self):
         print('Logged in')
+
+        if vote_cog := self.cogs.get("VoteCog"):
+            vote_cog.manage_vote.start()
 
     @staticmethod
     def get_percentage(part, total):
@@ -99,9 +102,9 @@ async def cmd_sounds(ctx):
     await ctx.send(answer[:-2] + " 🔊")
 
 
-@bot.listen("event_message")
+@bot.event(name="event_message")
 async def bati(message):
-    if message.author == "bati_mati":
+    if message.author and message.author.name == "bati_mati":
         if ("kappa" in message.content.lower() and random.random() < bot.BATI_KAPPA_PROBABILITY) \
                 or (random.random() < bot.BATI_PROBABILITY and time() >= bot.last_bati + (bot.BATI_DELAY * 3600)):
             sleep(random.random())
@@ -109,9 +112,9 @@ async def bati(message):
             bot.last_bati = time()
 
 
-@bot.listen("event_message")
+@bot.event(name="event_message")
 async def process_text_commands(message):
-    if message.author.name.lower() == bot.NICK.lower():
+    if not message.author or message.author.name.lower() == bot.NICK.lower():
         return
 
     if message.content[0] == "!":

@@ -3,8 +3,7 @@ import random
 from twitchio.ext import commands
 
 
-@commands.core.cog(name="Giveaway")
-class Giveaway:
+class Giveaway(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.giveaway_enabled = False

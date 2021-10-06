@@ -1,10 +1,10 @@
 aiohttp==3.7.4
-asgiref==3.2.10
+asgiref==3.4.1
 async-timeout==3.0.1
 attrs==20.3.0
 certifi==2020.12.5
 chardet==3.0.4
-Django==3.1.8
+Django==3.2.8
 fontawesome-free==5.15.1
 idna==2.10
 multidict==5.1.0
@@ -12,7 +12,7 @@ python-dotenv==0.14.0
 pytz==2020.1
 requests==2.25.1
 sqlparse==0.4.0
-twitchio==1.1.0
+twitchio==2.0.6
 typing-extensions==3.7.4.3
 urllib3==1.26.4
 websockets==8.1

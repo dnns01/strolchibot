@@ -1,11 +1,10 @@
 from twitchio.ext import commands
 
 
-@commands.core.cog(name="ScareCounter")
-class ScareCounter:
+class ScareCounter(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.scarecount = 18
+        self.scarecount = 0
 
     @commands.command(name="scarecount")
     async def cmd_scarecount(self, ctx, add=None):

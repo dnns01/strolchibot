@@ -5,8 +5,7 @@ import requests
 from twitchio.ext import commands
 
 
-@commands.core.cog(name="SpotifyCog")
-class SpotifyCog:
+class SpotifyCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.spotify_file = "spotify.json"

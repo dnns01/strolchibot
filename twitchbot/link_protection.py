@@ -7,8 +7,7 @@ from twitchio.ext import commands
 import config
 
 
-@commands.core.cog(name="LinkProtection")
-class LinkProtection:
+class LinkProtection(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.permit = {}
