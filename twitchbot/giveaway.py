@@ -18,7 +18,7 @@ class Giveaway(commands.Cog):
 
         if self.giveaway_enabled:
             if self.giveaway_entries.get(ctx.author.name) != 1:
-                await self.bot.send_me(ctx, random.choice(texts), "YellowGreen")
+                await self.bot.send_me(ctx, random.choice(texts))
                 self.giveaway_entries[ctx.author.name] = 1
 
     @commands.command(name="giveaway")
@@ -30,20 +30,16 @@ class Giveaway(commands.Cog):
                 self.giveaway_enabled = True
                 self.giveaway_entries = {}
                 await self.bot.send_me(ctx,
-                                       "Das Giveaway wurde gestartet. Schreibe !gierig in den Chat um daran teilzunehmen.",
-                                       "YellowGreen")
+                                       "Das Giveaway wurde gestartet. Schreibe !gierig in den Chat um daran teilzunehmen.")
             elif param == "close":
                 self.giveaway_enabled = False
-                await self.bot.send_me(ctx, "Das Giveaway wurde geschlossen. Es kann niemand mehr teilnehmen.",
-                                       "YellowGreen")
+                await self.bot.send_me(ctx, "Das Giveaway wurde geschlossen. Es kann niemand mehr teilnehmen.")
             elif param == "draw":
                 if len(self.giveaway_entries) > 0:
                     winner = random.choice(list(self.giveaway_entries))
                     entry_count = len(self.giveaway_entries)
                     del self.giveaway_entries[winner]
                     await self.bot.send_me(ctx,
-                                           f"Es wurde aus {entry_count} Einträgen ausgelost. Und der Gewinner ist... @{winner}",
-                                           "YellowGreen")
+                                           f"Es wurde aus {entry_count} Einträgen ausgelost. Und der Gewinner ist... @{winner}")
                 else:
-                    await self.bot.send_me(ctx, "Es muss Einträge geben, damit ein Gewinner gezogen werden kann.",
-                                           "YellowGreen")
+                    await self.bot.send_me(ctx, "Es muss Einträge geben, damit ein Gewinner gezogen werden kann.")
