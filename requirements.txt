@@ -11,7 +11,7 @@ multidict==5.1.0
 python-dotenv==0.14.0
 pytz==2020.1
 requests==2.25.1
-sqlparse==0.4.0
+sqlparse==0.4.2
 twitchio==2.0.6
 typing-extensions==3.7.4.3
 urllib3==1.26.5
