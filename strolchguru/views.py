@@ -8,7 +8,7 @@ from .models import Clip
 
 
 def home(request) -> HttpResponse:
-    clips = list(Clip.objects.all())
+    clips = list(Clip.objects.filter(is_published=True, is_downloaded=True))
     clip = random.choice(clips)
     return render(request, 'strolchguru_home.html', context={'clip': clip, 'mode': "random_clips"})
 

@@ -43,7 +43,7 @@
         {% else %}
        onended="window.location.reload(true)"
         {% endif %}
-       src="{{ clip.clip_url }}">
+       src="/media/clips/{{ clip.clip_id }}.mp4">
 </video>
 <div id="caption">
     <h1 id="clip_title">#{{ clip.id }} - {{ clip.title }}</h1>
