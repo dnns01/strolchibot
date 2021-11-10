@@ -37,12 +37,14 @@
 <body style="background: black;">
 
 <video id="clip" autoplay
-       controls
+       {% if controls %}controls{% endif %}
+
         {% if mode == "loop" %}
        loop
         {% else %}
        onended="window.location.reload(true)"
         {% endif %}
+
        src="/media/clips/{{ clip.clip_id }}.mp4">
 </video>
 <div id="caption">
