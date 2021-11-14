@@ -1,10 +1,12 @@
-from django.db import models
-from .managers import TwitchUserManager
-from strolchibot import twitch_api
 import os
 
+from django.db import models
 
-class TextCommand(models.Model):
+from strolchibot import twitch_api
+from .managers import TwitchUserManager
+
+
+class Command(models.Model):
     command = models.CharField(max_length=20)
     text = models.TextField(max_length=500)
     active = models.BooleanField(default=True)
@@ -63,11 +65,22 @@ class TwitchUser(models.Model):
 
     @property
     def is_authenticated(self):
-        broadcaster_id = int(os.getenv("BROADCASTER_ID"))
-        if self.id == broadcaster_id or self.admin:
+        return self.is_broadcaster or self.is_admin or self.is_mod
+
+    @property
+    def is_broadcaster(self):
+        return self.id == int(os.getenv("BROADCASTER_ID"))
+
+    @property
+    def is_admin(self):
+        return self.admin
+
+    @property
+    def is_mod(self):
+        if self.is_broadcaster:
             return True
         try:
-            broadcaster = TwitchUser.objects.get(pk=broadcaster_id)
+            broadcaster = TwitchUser.objects.get(pk=int(os.getenv("BROADCASTER_ID")))
             return twitch_api.is_mod(self, broadcaster)
         except TwitchUser.DoesNotExist:
             return False

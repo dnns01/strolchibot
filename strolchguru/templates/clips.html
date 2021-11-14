@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <div style="width: 1000px; margin-bottom: 10px; position: absolute; top: 20px; left: 150px;">
+        <div style="position:relative;">
+            <form method="get">
+                {% for field in search_form %}
+                    {{ field }}
+                {% endfor %}
+                <div style="position: absolute; right: -48px; top:-1px;">
+                    <button type="submit" value="" class="w3-btn w3-strolchpink" style="height: 41px;">
+                        <i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% for clip in clips %}
+        <div class="w3-card clip-card"
+             style="width: 480px; padding: 10px; box-sizing: content-box; float: left; margin-right: 10px; height:400px; overflow: hidden;">
+            <div style="height: 272px; width: 480px; position: relative">
+                <a href="{% url "clip" clip.id %}">
+                    <img src="/media/clips/{{ clip.clip_id }}.jpg"/>
+                </a>
+                <overlay
+                        style="position: absolute; left: 0px; top: 0px; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.created_at|date:"j.m.Y H:i" }}</overlay>
+                <overlay
+                        style="position: absolute; right: 0px; bottom: 0px; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.duration }}
+                    sec
+                </overlay>
+                <overlay
+                        style="position: absolute; left: 0px; bottom: 0px; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.curator }}</overlay>
+            </div>
+            <p><b>{{ clip.display_title }}</b></p>
+            <p>
+                {% for tag in clip.tags.all %}
+                    <a href="{% url "clips" %}?search={{ tag.name }}" style="text-decoration: none;">
+                        <span class="w3-tag w3-round w3-strolchpink">{{ tag.name }}</span>
+                    </a>
+                {% endfor %}
+            </p>
+        </div>
+    {% endfor %}
+{% endblock %}

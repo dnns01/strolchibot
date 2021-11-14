@@ -4,6 +4,15 @@
         <div class="w3-container w3-form-container">
             {{ formset_form.non_field_errors }}
             {% for field in formset_form %}
+                {% if field.name != "active" %}
+
+                    {% if form.collapsible and not forloop.parentloop.last and forloop.counter0 == 1 %}
+                        <a href="#" class="accordeon w3-display-bottommiddle"
+                           id="accordeon-{{ forloop.parentloop.counter0 }}">
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="w3-hide" id="accordeon-{{ forloop.parentloop.counter0 }}-element">
+                    {% endif %}
                 <p>
                     {{ field.errors }}
                     {% if field.widget_type == "checkbox" %}
@@ -15,15 +24,30 @@
                     {% else %}
                         {{ field }}
                     {% endif %}
-
                 </p>
+
+
+                {% if form.collapsible and not forloop.parentloop.last and forloop.last %}
+                    </div>
+                {% endif %}
+                {% endif %}
             {% endfor %}
         </div>
         {% if formset_form.fields.id.initial %}
             <div class="w3-display-topright">
-                <p><a href="{% url form.remove_url formset_form.fields.id.initial %}"
-                      class="w3-button w3-strolchpink"><i
-                        class="fas fa-trash-alt"></i></a></p>
+                <p>
+                    {% for field in formset_form %}
+                        {% if field.name == "active" and form.activate_url %}
+                            <a href="{% url form.activate_url formset_form.fields.id.initial %}" class="w3-button
+                                {% if field.value %} w3-strolchpink {% else %} w3-strolchgray {% endif %}">
+                                <i class="fas fa-check-square"></i>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+
+                    <a href="{% url form.remove_url formset_form.fields.id.initial %}"
+                       class="w3-button w3-strolchpink"><i
+                            class="fas fa-trash-alt"></i></a></p>
             </div>
         {% endif %}
     </div>

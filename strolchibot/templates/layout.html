@@ -12,11 +12,13 @@
 </head>
 <body class="w3-light-gray w3-cursive">
 <nav>
-{% include 'navigation.html' %}
+    {% include 'navigation.html' %}
 </nav>
 <div id="content">
-    <div class="w3-container w3-cursive">
+    <div class="w3-container w3-cursive" style="position: relative;">
         <h1 class="w3-cursive">{{ title }}</h1>
+        {% block title %}
+        {% endblock %}
     </div>
     <div class="w3-container">
         {% block content %}{% endblock %}

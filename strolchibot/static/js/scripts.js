@@ -14,3 +14,14 @@ document.querySelectorAll(".tablink").forEach(value => {
         value.className += " active";
     })
 });
+
+
+document.querySelectorAll(".accordeon").forEach(value => {
+    value.addEventListener("click", evt => {
+        var accordeonItem = document.querySelector("#" + value.id + "-element");
+        accordeonItem.classList.toggle("w3-show");
+        accordeonItem.classList.toggle("w3-hide");
+        evt.target.classList.toggle("fa-chevron-down");
+        evt.target.classList.toggle("fa-chevron-up");
+    });
+});

@@ -21,4 +21,5 @@ urlpatterns = [
     path('', views.home, name="strolchguru"),
     path('<int:id>', views.clip, name="clip"),
     path('<int:id>/json', views.clip_json, name="clip_json"),
+    path('clips', views.clips, name="clips"),
 ]

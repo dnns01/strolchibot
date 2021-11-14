@@ -1,6 +1,5 @@
 import sqlite3
 import time
-from pprint import pprint
 
 import youtube_dl
 from gql import Client, gql
@@ -75,9 +74,6 @@ def save_clips(clips):
             clip_url = thumbnail_url.split("-preview-")[0] + ".mp4"
             created_at = node["createdAt"]
             duration = node["durationSeconds"]
-
-            if clip_id == 946839771:
-                pprint(node)
 
             if clip := get_clip(c, clip_id):
                 c.execute('UPDATE strolchguru_clip SET title = ?, url = ?, embed_url = ?, slug = ?, thumbnail_url = ?, '

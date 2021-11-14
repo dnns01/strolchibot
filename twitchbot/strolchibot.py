@@ -122,7 +122,7 @@ async def process_text_commands(message):
         conn = sqlite3.connect("db.sqlite3")
 
         c = conn.cursor()
-        c.execute('SELECT text from strolchibot_textcommand where command = ? and active is true', (command,))
+        c.execute('SELECT text from strolchibot_command where command = ? and active is true', (command,))
         texts = c.fetchall()
         if len(texts) > 0:
             text = random.choice(texts)[0]

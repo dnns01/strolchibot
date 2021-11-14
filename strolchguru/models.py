@@ -15,3 +15,15 @@ class Clip(models.Model):
     created_at = models.DateTimeField()
     is_published = models.BooleanField(default=True)
     is_downloaded = models.BooleanField(default=False)
+    tags = models.ManyToManyField("Tag")
+
+    @property
+    def display_title(self):
+        if self.custom_title:
+            return self.custom_title
+
+        return self.title
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100)

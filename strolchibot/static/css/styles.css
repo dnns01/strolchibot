@@ -12,11 +12,19 @@
 }
 
 .w3-strolchpink:hover {
-    background: #d2619b!important;
+    background: #d2619b !important;
+}
+
+.w3-strolchgray {
+    background: #ccc;
+}
+
+.w3-strolchgray:hover {
+    background: #888 !important;
 }
 
 .w3-hover-strolchpink:hover, .w3-hover-strolchpink.active {
-    background: #e092b8!important;
+    background: #e092b8 !important;
 }
 
 #logo {
@@ -24,7 +32,7 @@
 }
 
 .w3-form-container {
-    margin-right: 50px;
+    margin-right: 120px;
 }
 
 .w3-display-topright .w3-button {
@@ -109,4 +117,8 @@ input:checked + .slider:before {
 
 .tablink {
     text-align: center;
+}
+
+.w3-hide, .w3-show {
+    transition: display 2s;
 }
