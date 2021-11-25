@@ -3,7 +3,7 @@ from django.db import models
 
 class Clip(models.Model):
     title = models.CharField(max_length=100)
-    custom_title = models.CharField(max_length=100, null=True)
+    custom_title = models.CharField(max_length=100, null=True, blank=True)
     clip_id = models.IntegerField(unique=True)
     url = models.URLField()
     embed_url = models.URLField()
@@ -27,3 +27,6 @@ class Clip(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name

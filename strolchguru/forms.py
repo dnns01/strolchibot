@@ -1,5 +1,8 @@
 from django import forms
 
+from strolchibot.forms import add_classes, BaseModelForm
+from .models import Clip
+
 
 class ClipSearchForm(forms.Form):
     search = forms.CharField(label="Search", required=False)
@@ -9,11 +12,8 @@ class ClipSearchForm(forms.Form):
         add_classes(self.fields)
 
 
-def add_classes(fields):
-    for field_name, field in fields.items():
-        if type(field) is forms.fields.BooleanField:
-            field.widget.attrs['class'] = ' w3-switch '
-            field.label_suffix = ""
-        else:
-            field.widget.attrs['class'] = ' w3-input'
-        field.widget.attrs['placeholder'] = field.label
+class ClipEditForm(BaseModelForm):
+    class Meta:
+        model = Clip
+        fields = ['custom_title', 'tags']
+        widgets = {'tags': forms.widgets.CheckboxSelectMultiple()}

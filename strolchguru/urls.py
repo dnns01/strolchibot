@@ -19,7 +19,11 @@ from strolchguru import views
 
 urlpatterns = [
     path('', views.home, name="strolchguru"),
+    path('tag/<str:tag>', views.home_tag, name="home_tag"),
     path('<int:id>', views.clip, name="clip"),
     path('<int:id>/json', views.clip_json, name="clip_json"),
     path('clips', views.clips, name="clips"),
+    path('clips/edit/<int:clip_id>', views.clip_edit, name="clip_edit"),
+    path('tags', views.tags, name="tags"),
+    path('tags/remove/<int:id>', views.tags_remove, name="tags_remove"),
 ]

@@ -50,3 +50,28 @@ function getCurrentPage(urlParams) {
         return parseInt(currentPage);
     }
 }
+
+document.querySelectorAll(".clip-edit").forEach(value => {
+    value.addEventListener("click", evt => {
+        const clipEditModal = document.querySelector("#clip-edit-modal");
+        clipEditModal.style.display = "block";
+    });
+});
+
+document.querySelectorAll("input.w3-multiple-choice").forEach(value => {
+    value.addEventListener("change", evt => {
+        setLabelClass(evt.target);
+    })
+
+    setLabelClass(value);
+})
+
+function setLabelClass(input) {
+    let label = input.parentElement;
+    let isChecked = input.checked;
+    if (isChecked) {
+        label.classList.add("w3-multiple-choice-checked")
+    } else {
+        label.classList.remove("w3-multiple-choice-checked")
+    }
+}

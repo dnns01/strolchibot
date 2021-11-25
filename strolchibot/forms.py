@@ -1,4 +1,5 @@
 from django import forms
+
 from .models import Config
 
 
@@ -39,6 +40,8 @@ def add_classes(fields):
         if type(field) is forms.fields.BooleanField:
             field.widget.attrs['class'] = ' w3-switch '
             field.label_suffix = ""
+        elif type(field) is forms.models.ModelMultipleChoiceField:
+            field.widget.attrs['class'] = ' w3-multiple-choice '
         else:
             field.widget.attrs['class'] = ' w3-input '
         field.widget.attrs['placeholder'] = field.label

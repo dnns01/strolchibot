@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="w3-card w3-white w3-padding w3-padding-16">
+        <div style="width: 75%; margin: auto;">
+            <video src="/media/clips/{{ clip.clip_id }}.mp4" controls style="width:100%">
+
+            </video>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div>
+                    {{ field }}
+                </div>
+            {% endfor %}
+
+            <button class="w3-button w3-strolchpink" type="submit">Save</button>
+        </form>
+    </div>
+{% endblock %}

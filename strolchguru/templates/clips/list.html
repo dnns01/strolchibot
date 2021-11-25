@@ -9,7 +9,7 @@
                 {% endfor %}
                 <div style="position: absolute; right: -48px; top:-1px;">
                     <button type="submit" value="" class="w3-btn w3-strolchpink" style="height: 41px;">
-                        <i class="fas fa-search"></i></button>
+                        <em class="fas fa-search"></em></button>
                 </div>
             </form>
         </div>
@@ -18,22 +18,32 @@
 
 {% block content %}
     {% for clip in clips %}
-        <div class="w3-card clip-card"
+        <div class="w3-card w3-white clip-card"
              style="width: 480px; padding: 10px; box-sizing: content-box; float: left; margin-right: 10px; height:400px; overflow: hidden;">
             <div style="height: 272px; width: 480px; position: relative">
                 <a href="{% url "clip" clip.id %}?controls=1">
-                    <img src="/media/clips/{{ clip.clip_id }}.jpg"/>
+                    <img src="/media/clips/{{ clip.clip_id }}.jpg"
+                         alt="Thumbnail for clip with title {{ clip.display_title }}"/>
                 </a>
-                <overlay
-                        style="position: absolute; left: 0px; top: 0px; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.created_at|date:"j.m.Y H:i" }}</overlay>
-                <overlay
-                        style="position: absolute; right: 0px; bottom: 0px; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.duration }}
+                <span
+                        style="position: absolute; left: 0; top: 0; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.created_at|date:"j.m.Y H:i" }}</span>
+                <span
+                        style="position: absolute; right: 0; bottom: 0; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.duration }}
                     sec
-                </overlay>
-                <overlay
-                        style="position: absolute; left: 0px; bottom: 0px; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.curator }}</overlay>
+                </span>
+                <span
+                        style="position: absolute; left: 0; bottom: 0; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.curator }}</span>
             </div>
-            <p><b>{{ clip.display_title }}</b></p>
+            <div class="w3-display-container">
+                <p class="w3-bold">{{ clip.display_title }}</p>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url "clip_edit" clip.id %}"
+                       class="w3-button w3-strolchpink w3-display-topright clip-edit"><em
+                            class="fas fa-pencil-alt"></em></a>
+                {% endif %}
+            </div>
+
             <p>
                 {% for tag in clip.tags.all %}
                     <a href="{% url "clips" %}?search={{ tag.name }}" style="text-decoration: none;">
