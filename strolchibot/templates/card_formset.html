@@ -30,6 +30,10 @@
                 {% if form.collapsible and not forloop.parentloop.last and forloop.last %}
                     </div>
                 {% endif %}
+                {% else %}
+                    <div style="display: none">
+                        {{ field }}
+                    </div>
                 {% endif %}
             {% endfor %}
         </div>
