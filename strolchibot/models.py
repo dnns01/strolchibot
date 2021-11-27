@@ -84,3 +84,8 @@ class TwitchUser(models.Model):
             return twitch_api.is_mod(self, broadcaster)
         except TwitchUser.DoesNotExist:
             return False
+
+
+class Counter(models.Model):
+    name = models.CharField(max_length=50)
+    count = models.IntegerField()

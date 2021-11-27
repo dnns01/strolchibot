@@ -73,6 +73,7 @@ def clip_json(request, id) -> JsonResponse:
 
 def clips(request) -> HttpResponse:
     page = request.GET.get("page", "1")
+    allow_edit = request.user.is_authenticated
     clips = Clip.objects.filter(is_downloaded=True).order_by("-created_at")
     if not (isinstance(request.user, TwitchUser) and request.user.is_mod and request.user.is_admin):
         clips = clips.filter(is_published=True)
@@ -96,7 +97,8 @@ def clips(request) -> HttpResponse:
     page_obj = paginator.get_page(page)
 
     return render(request, "clips/list.html",
-                  context={"title": "Clips", "clips": page_obj, "search_form": form, "page": page, "pages": pages})
+                  context={"title": "Clips", "clips": page_obj, "search_form": form, "page": page, "pages": pages,
+                           "allow_edit": allow_edit})
 
 
 @login_required(login_url="/login")

@@ -37,7 +37,7 @@
             <div class="w3-display-container">
                 <p class="w3-bold">{{ clip.display_title }}</p>
 
-                {% if user.is_authenticated %}
+                {% if allow_edit %}
                     <a href="{% url "clip_edit" clip.id %}"
                        class="w3-button w3-strolchpink w3-display-topright clip-edit"><em
                             class="fas fa-pencil-alt"></em></a>

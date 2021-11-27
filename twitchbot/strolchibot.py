@@ -1,6 +1,5 @@
 import os
 import random
-import sqlite3
 from abc import ABC
 from time import sleep, time
 
@@ -10,13 +9,14 @@ from twitchio import Channel, Message
 from twitchio.ext import commands
 from twitchio.ext.commands import Context
 
-from armin import Armin
-from giveaway import Giveaway
-from klassenbuch_cog import KlassenbuchCog
-from link_protection import LinkProtection
-from scarecounter import ScareCounter
-from spotify_cog import SpotifyCog
-from vote_cog import VoteCog
+import armin
+import chat_commands
+import giveaway
+import klassenbuch_cog
+import link_protection
+import scarecounter
+import spotify_cog
+import vote_cog
 
 load_dotenv()
 
@@ -35,13 +35,14 @@ class StrolchiBot(commands.Bot, ABC):
         self.last_bati = 0
         super().__init__(token=self.IRC_TOKEN, prefix=self.PREFIX, nick=self.NICK, initial_channels=[self.CHANNEL],
                          client_id=self.CLIENT_ID, client_secret=self.CLIENT_SECRET)
-        self.add_cog(VoteCog(self))
-        self.add_cog(KlassenbuchCog(self))
-        self.add_cog(SpotifyCog(self))
-        self.add_cog(LinkProtection(self))
-        self.add_cog(Armin(self))
-        self.add_cog(ScareCounter(self))
-        self.add_cog(Giveaway(self))
+        self.add_cog(vote_cog.VoteCog(self))
+        self.add_cog(klassenbuch_cog.KlassenbuchCog(self))
+        self.add_cog(spotify_cog.SpotifyCog(self))
+        self.add_cog(link_protection.LinkProtection(self))
+        self.add_cog(armin.Armin(self))
+        self.add_cog(scarecounter.ScareCounter(self))
+        self.add_cog(giveaway.Giveaway(self))
+        self.add_cog(chat_commands.Commands(self))
 
     @staticmethod
     async def send_me(ctx, content):
@@ -110,24 +111,6 @@ async def bati(message):
             sleep(random.random())
             await bot.channel().send("bati")
             bot.last_bati = time()
-
-
-@bot.event(name="event_message")
-async def process_text_commands(message):
-    if not message.author or message.author.name.lower() == bot.NICK.lower():
-        return
-
-    if message.content[0] == "!":
-        command = message.content.split(" ")[0][1:]
-        conn = sqlite3.connect("db.sqlite3")
-
-        c = conn.cursor()
-        c.execute('SELECT text from strolchibot_command where command = ? and active is true', (command,))
-        texts = c.fetchall()
-        if len(texts) > 0:
-            text = random.choice(texts)[0]
-            await message.channel.send(text)
-        conn.close()
 
 
 bot.run()
