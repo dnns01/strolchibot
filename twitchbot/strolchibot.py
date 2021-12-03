@@ -9,12 +9,10 @@ from twitchio import Channel, Message
 from twitchio.ext import commands
 from twitchio.ext.commands import Context
 
-import armin
 import chat_commands
 import giveaway
 import klassenbuch_cog
 import link_protection
-import scarecounter
 import spotify_cog
 import vote_cog
 
@@ -39,8 +37,6 @@ class StrolchiBot(commands.Bot, ABC):
         self.add_cog(klassenbuch_cog.KlassenbuchCog(self))
         self.add_cog(spotify_cog.SpotifyCog(self))
         self.add_cog(link_protection.LinkProtection(self))
-        self.add_cog(armin.Armin(self))
-        self.add_cog(scarecounter.ScareCounter(self))
         self.add_cog(giveaway.Giveaway(self))
         self.add_cog(chat_commands.Commands(self))
 
