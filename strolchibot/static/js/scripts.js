@@ -75,3 +75,25 @@ function setLabelClass(input) {
         label.classList.remove("w3-multiple-choice-checked")
     }
 }
+
+
+function commandSetActive(checkbox, command) {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let payload = {
+        command: command,
+        active: checkbox.checked
+    };
+
+    console.log(payload);
+    console.log(JSON.stringify(payload));
+
+    fetch('/commands/active', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload)
+    }).then(response => response.json()).then(data => checkbox.checked = data.active);
+}

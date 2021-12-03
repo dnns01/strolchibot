@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Config
+from .models import Config, Command
 
 
 class BaseModelForm(forms.ModelForm):
@@ -45,3 +45,15 @@ def add_classes(fields):
         else:
             field.widget.attrs['class'] = ' w3-input '
         field.widget.attrs['placeholder'] = field.label
+
+
+class CommandForm(BaseModelForm):
+    class Meta:
+        model = Command
+        exclude = ['active']
+
+# class ClipEditForm(BaseModelForm):
+#     class Meta:
+#         model = Clip
+#         fields = ['custom_title', 'tags']
+#         widgets = {'tags': forms.widgets.CheckboxSelectMultiple()}

@@ -1,58 +1,19 @@
+import json
 import os
 
 import requests
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
-from django.http import Http404
-from django.shortcuts import render, redirect
+from django.http import Http404, JsonResponse, HttpResponse, HttpRequest
+from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import BaseModelForm, LinkProtectionConfigForm
+from .forms import BaseModelForm, LinkProtectionConfigForm, CommandForm
 from .models import Command, Klassenbuch, Timer, Config, LinkPermit, LinkWhitelist, LinkBlacklist
 
 
 def home(request):
     return render(request, "home.html", {"title": "Strolchibot"})
-
-
-@login_required(login_url="/login")
-def commands(request):
-    CommandsFormSet = modelformset_factory(Command, form=BaseModelForm, fields=("command", "text", "active"))
-    if request.method == "POST":
-        formset = CommandsFormSet(request.POST, request.FILES)
-        if formset.is_valid():
-            formset.save()
-
-    forms = {
-        "Basic Configuration": {
-            "display": "card",
-            "type": "formset",
-            "name": "commands",
-            "formset": CommandsFormSet(),
-            "remove_url": "commands_remove",
-            "activate_url": "commands_activate",
-            "collapsible": True,
-
-        },
-    }
-
-    return render(request, "form.html", {"title": "Commands", "forms": forms, "active": "commands"})
-
-
-@login_required(login_url="/login")
-def commands_remove(request, id):
-    Command.objects.filter(pk=id).delete()
-
-    return redirect("/commands")
-
-
-@login_required(login_url="/login")
-def commands_activate(request, id):
-    command = Command.objects.get(pk=id)
-    command.active = not command.active
-    command.save()
-
-    return redirect("/commands")
 
 
 @login_required(login_url="/login")
@@ -273,3 +234,66 @@ def exchange_code(code):
                 "refresh_token": credentials["refresh_token"]}
 
     return None
+
+
+# <editor-fold desc="Commands">
+@login_required(login_url="/login")
+def commands(request: HttpRequest) -> HttpResponse:
+    return render(request, "commands/list.html",
+                  {"title": "Commands", "commands": Command.objects.all(), "active": "commands"})
+
+
+@login_required(login_url="/login")
+def commands_new(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = CommandForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("/commands")
+
+    form = CommandForm()
+
+    return render(request, "commands/edit.html",
+                  {"title": "Commands", "form": {"form": form}})
+
+
+@login_required(login_url="/login")
+def commands_remove(request: HttpRequest, command_id: int) -> HttpResponse:
+    Command.objects.filter(pk=command_id).delete()
+
+    return redirect("/commands")
+
+
+@login_required(login_url="/login")
+def commands_edit(request: HttpRequest, command_id: int) -> HttpResponse:
+    command = get_object_or_404(Command, pk=command_id)
+
+    if request.method == "POST":
+        form = CommandForm(request.POST, instance=command)
+
+        if form.is_valid():
+            form.save()
+            return redirect("/commands")
+
+    form = CommandForm(instance=command)
+
+    return render(request, "commands/edit.html",
+                  {"title": "Commands", "form": {"form": form}})
+
+
+@login_required(login_url="/login")
+def commands_set_active(request: HttpRequest) -> JsonResponse:
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+            command = get_object_or_404(Command, command=payload["command"])
+            command.active = payload["active"]
+            command.save()
+
+            return JsonResponse({"active": command.active})
+        except (json.decoder.JSONDecodeError, KeyError):
+            pass
+
+    raise Http404
+# </editor-fold>
