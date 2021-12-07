@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Config, Command
+from .models import Config, Command, Spotify
 
 
 class BaseModelForm(forms.ModelForm):
@@ -52,8 +52,8 @@ class CommandForm(BaseModelForm):
         model = Command
         exclude = ['active']
 
-# class ClipEditForm(BaseModelForm):
-#     class Meta:
-#         model = Clip
-#         fields = ['custom_title', 'tags']
-#         widgets = {'tags': forms.widgets.CheckboxSelectMultiple()}
+
+class SpotifyForm(BaseModelForm):
+    class Meta:
+        model = Spotify
+        fields = ['streamer']

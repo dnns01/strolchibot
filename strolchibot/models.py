@@ -89,3 +89,13 @@ class TwitchUser(models.Model):
 class Counter(models.Model):
     name = models.CharField(max_length=50)
     count = models.IntegerField()
+
+
+class Spotify(models.Model):
+    streamer = models.TextField(max_length=50, unique=True)
+    access_token = models.TextField(max_length=200)
+    token_type = models.TextField(max_length=20)
+    expires_in = models.IntegerField()
+    refresh_token = models.TextField(max_length=200)
+    scope = models.TextField(max_length=100)
+    user_id = models.TextField(max_length=50)

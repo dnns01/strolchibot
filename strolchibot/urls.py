@@ -47,6 +47,10 @@ urlpatterns = [
          name="link_protection_blacklist_remove"),
     path('strolchguru/', include('strolchguru.urls')),
     path('twitter/', include('twitter.urls')),
+    path('spotify', views.spotify, name="spotify"),
+    path('spotify/edit/<str:streamer>', views.spotify_edit, name="spotify_edit"),
+    path('spotify/login', views.spotify_login, name="spotify_login"),
+    path('spotify/login/redirect', views.spotify_login_redirect, name="spotify_login_redirect"),
 ]
 
 if settings.DEBUG:

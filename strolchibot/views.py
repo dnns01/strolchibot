@@ -8,8 +8,8 @@ from django.forms import modelformset_factory
 from django.http import Http404, JsonResponse, HttpResponse, HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import BaseModelForm, LinkProtectionConfigForm, CommandForm
-from .models import Command, Klassenbuch, Timer, Config, LinkPermit, LinkWhitelist, LinkBlacklist
+from .forms import BaseModelForm, LinkProtectionConfigForm, CommandForm, SpotifyForm
+from .models import Command, Klassenbuch, Timer, Config, LinkPermit, LinkWhitelist, LinkBlacklist, Spotify
 
 
 def home(request):
@@ -296,4 +296,84 @@ def commands_set_active(request: HttpRequest) -> JsonResponse:
             pass
 
     raise Http404
+
+
+# </editor-fold>
+
+
+# <editor-fold desc="Spotify">
+@login_required(login_url="/login")
+def spotify(request: HttpRequest) -> HttpResponse:
+    spotify_logins = Spotify.objects.all()
+
+    return render(request, "spotify/list.html",
+                  {"title": "Spotify", "spotify_logins": spotify_logins})
+
+
+def spotify_edit(request: HttpRequest, streamer: str) -> HttpResponse:
+    user = get_object_or_404(Spotify, streamer=streamer)
+
+    if request.method == "POST":
+        form = SpotifyForm(request.POST, instance=user)
+
+        if form.is_valid():
+            form.save()
+            return redirect("/spotify")
+
+    form = SpotifyForm(instance=user)
+
+    return render(request, "spotify/edit.html",
+                  {"title": "Spotify", "form": {"form": form}})
+
+
+@login_required(login_url="/login")
+def spotify_login(request: HttpRequest) -> HttpResponse:
+    url = os.getenv("SPOTIFY_AUTH_URL")
+    return redirect(url)
+
+
+@login_required(login_url="/login")
+def spotify_login_redirect(request: HttpRequest) -> JsonResponse:
+    code = request.GET.get('code')
+    data = {
+        "client_id": os.getenv("SPOTIFY_CLIENT_ID"),
+        "client_secret": os.getenv("SPOTIFY_CLIENT_SECRET"),
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": os.getenv("SPOTIFY_REDIRECT_URI"),
+    }
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    response = requests.post("https://accounts.spotify.com/api/token", data=data, headers=headers)
+    credentials = response.json()
+    access_token = credentials['access_token']
+    token_type = credentials['token_type']
+    expires_in = credentials['expires_in']
+    refresh_token = credentials['refresh_token']
+    scope = credentials['scope']
+
+    response = requests.get("https://api.spotify.com/v1/me", headers={
+        'Authorization': f'Bearer {access_token}'
+    })
+
+    user_id = response.json()['id']
+    streamer = response.json()['display_name'].replace(' ', '').lower()
+    users = Spotify.objects.filter(user_id=user_id)
+
+    if len(list(users)) == 1:
+        for user in users:
+            user.access_token = access_token
+            user.token_type = token_type
+            user.expires_in = expires_in
+            user.refresh_token = refresh_token
+            user.scope = scope
+            user.save()
+            return redirect(f"/spotify")
+    else:
+        user = Spotify(streamer=streamer, access_token=access_token, token_type=token_type,
+                       expires_in=expires_in, refresh_token=refresh_token, scope=scope, user_id=user_id)
+        user.save()
+        return redirect(f"/spotify/edit/{user_id}")
+
 # </editor-fold>
