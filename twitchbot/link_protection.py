@@ -35,6 +35,7 @@ class LinkProtection(commands.Cog):
 
         return False
 
+    @commands.Cog.event()
     async def event_message(self, message):
         if message.author.is_mod:
             return
@@ -42,7 +43,6 @@ class LinkProtection(commands.Cog):
         # Mods are always allowed to post links. So if we reach this point, the author of the message is not a mod,
         # and we can start checking, whether the message contains a link or not
         if links := re.findall(r"(?:https?:\/\/)?((?:[a-zA-Z0-9_-]+\.)+[a-z]{2,}[a-zA-Z0-9?&=_\/-]*)", message.content):
-            print(links)
             for link in links:
                 if self.lookup_blacklist(link):
                     await message.channel.timeout(message.author.name, 1)
@@ -55,13 +55,13 @@ class LinkProtection(commands.Cog):
             # Reaching this point, we now that the message contains at least one link. Now we can check,
             # if Link Protection is turned on or not. If it is turned off, we don't need further checks, because links
             # are allowed.
-            if not config.get_bool("LinkProtectionActive"):
+            if not config.get_bool("link_protection_active"):
                 return
 
             # Reaching this point means, that the message contains a link, the author is not a mod and Link Protection
             # is turned on. Next step is to check, if Subs are permitted to post links and if the author of the message
             # is a sub. If true, no further processing neccessary, posting a link is allowed.
-            if self.bot.is_subscriber(message.author) and config.get_bool("LinkProtectionPermitSubs"):
+            if self.bot.is_subscriber(message.author) and config.get_bool("link_protection_permit_subs"):
                 return
 
             # Reaching this point means, the author is not a mod, the message contains a link and links protection is

@@ -4,8 +4,8 @@ import os
 import requests
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
-from django.forms import modelformset_factory
-from django.http import Http404, JsonResponse, HttpResponse, HttpRequest, HttpResponseNotAllowed
+from django.forms import modelformset_factory, modelform_factory
+from django.http import Http404, JsonResponse, HttpResponse, HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import BaseModelForm, LinkProtectionConfigForm, CommandForm, SpotifyForm, CounterForm
@@ -80,39 +80,6 @@ def timers_activate(request, id):
     timer.save()
 
     return redirect("/timers")
-
-
-@login_required(login_url="/login")
-def config(request):
-    if request.user.admin:
-        ConfigFormSet = modelformset_factory(Config, form=BaseModelForm, fields=("key", "value"))
-        if request.method == "POST":
-            formset = ConfigFormSet(request.POST, request.FILES)
-            if formset.is_valid():
-                formset.save()
-
-        forms = {
-            "Basic Configuration": {
-                "display": "card",
-                "type": "formset",
-                "name": "config",
-                "formset": ConfigFormSet(),
-                "remove_url": "config_remove", },
-        }
-
-        return render(request, "form.html", {"title": "Config", "forms": forms, "active": "config", })
-
-    raise Http404
-
-
-@login_required(login_url="/login")
-def config_remove(request, id):
-    if request.user.admin:
-        Config.objects.filter(pk=id).delete()
-
-        return redirect("/config")
-
-    raise Http404
 
 
 @login_required(login_url="/login")

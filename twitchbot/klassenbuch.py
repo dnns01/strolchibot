@@ -3,7 +3,7 @@ import sqlite3
 from twitchio.ext import commands
 
 
-class KlassenbuchCog(commands.Cog):
+class Klassenbuch(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

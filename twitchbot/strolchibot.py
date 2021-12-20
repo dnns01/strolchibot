@@ -9,12 +9,7 @@ from twitchio import Channel, Message
 from twitchio.ext import commands
 from twitchio.ext.commands import Context
 
-import chat_commands
-import giveaway
-import klassenbuch_cog
-import link_protection
-import spotify_cog
-import vote_cog
+import chat_commands, giveaway, klassenbuch, link_protection, spotify_cog, vote_cog
 
 load_dotenv()
 
@@ -34,7 +29,7 @@ class StrolchiBot(commands.Bot, ABC):
         super().__init__(token=self.IRC_TOKEN, prefix=self.PREFIX, nick=self.NICK, initial_channels=[self.CHANNEL],
                          client_id=self.CLIENT_ID, client_secret=self.CLIENT_SECRET)
         self.add_cog(vote_cog.VoteCog(self))
-        self.add_cog(klassenbuch_cog.KlassenbuchCog(self))
+        self.add_cog(klassenbuch.Klassenbuch(self))
         self.add_cog(spotify_cog.SpotifyCog(self))
         self.add_cog(link_protection.LinkProtection(self))
         self.add_cog(giveaway.Giveaway(self))

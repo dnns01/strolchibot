@@ -4,6 +4,8 @@ import sqlite3
 
 from twitchio.ext import commands
 
+import spotify_cog
+
 
 class Commands(commands.Cog):
     def __init__(self, bot):
@@ -32,6 +34,7 @@ class Commands(commands.Cog):
 
     def process_variables(self, text, args):
         variables = re.findall("\{[\w\d\s+-]+}", text)
+        spotify = None
 
         for variable in variables:
             tokens = variable[1:-1].split()
@@ -39,6 +42,9 @@ class Commands(commands.Cog):
             if tokens[0] == "count" or tokens[0] == "getcount":
                 count = self.process_counter(tokens[0], tokens[1:])
                 text = text.replace(variable, str(count))
+            elif tokens[0] == "spotify":
+                value = self.process_spotify(tokens[1], spotify)
+                text = text.replace(variable, value)
 
         return text
 
@@ -60,6 +66,11 @@ class Commands(commands.Cog):
             self.set_count(counter_name, counter)
 
         return counter
+
+    def process_spotify(self, param, spotify):
+        if not spotify:
+            pass
+            # spotify = spotify_cog.
 
     def get_count(self, name):
         conn = sqlite3.connect("db.sqlite3")

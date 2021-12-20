@@ -1,24 +1,16 @@
 import sqlite3
 
 
-def get_value(key):
+def get(column):
     conn = sqlite3.connect("db.sqlite3")
 
     c = conn.cursor()
-    c.execute('SELECT value from strolchibot_config where key = ?', (key,))
+    c.execute(f"SELECT {column} FROM strolchibot_config")
     value = c.fetchone()[0]
     conn.close()
 
     return value
 
 
-def get_int(key):
-    return int(get_value(key))
-
-
-def get_float(key):
-    return float(get_value(key))
-
-
-def get_bool(key):
-    return get_value(key) == "1"
+def get_bool(column):
+    return get(column) == 1

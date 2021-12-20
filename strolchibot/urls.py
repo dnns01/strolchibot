@@ -39,8 +39,6 @@ urlpatterns = [
     path('timers/', views.timers, name="timers"),
     path('timers/remove/<int:id>', views.timers_remove, name="timers_remove"),
     path('timers/activate/<int:id>', views.timers_activate, name="timers_activate"),
-    path('config/', views.config, name="config"),
-    path('config/remove/<int:id>', views.config_remove, name="config_remove"),
     path('link_protection/', views.link_protection, name="link_protection"),
     path('link_protection/permit/remove/<int:id>', views.link_protection_permit_remove,
          name="link_protection_permit_remove"),

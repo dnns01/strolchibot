@@ -16,10 +16,6 @@
            class="w3-bar-item w3-button {% if title == "Link Protection" %}w3-light-gray{% endif %}">Link Protection</a>
         <a href="{% url 'spotify' %}"
            class="w3-bar-item w3-button {% if title == "Spotify" %}w3-light-gray{% endif %}">Spotify</a>
-        {% if user.admin %}
-            <a href="{% url 'config' %}"
-               class="w3-bar-item w3-button {% if title == "Config" %}w3-light-gray{% endif %}">Config</a>
-        {% endif %}
     {% else %}
         <a href="{% url 'login' %}" class="w3-bar-item w3-button">Login</a>
     {% endif %}
