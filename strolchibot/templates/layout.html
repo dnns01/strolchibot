@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="{% static 'css/w3.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
 </head>
-<body class="w3-light-gray w3-cursive">
+<body class="w3-light-gray">
 <nav>
     {% include 'navigation.html' %}
 </nav>
 <div id="content">
-    <div class="w3-container w3-cursive" style="position: relative;">
-        <h1 class="w3-cursive">{{ title }}</h1>
+    <div class="w3-container" style="position: relative;">
+        <h1>{{ title }}</h1>
         {% block title %}
         {% endblock %}
     </div>

@@ -1,3 +1,15 @@
+@font-face {
+  font-family: 'Chalkboard SE';
+  /*font-style: normal;*/
+  /*font-weight: 400;*/
+  /*font-display: block;*/
+  src: url("../webfonts/chalkboard-se-regular.ttf") format("truetype");
+}
+
+*, h1, h2, h3, h4, h5 {
+    font-family: "Comic Sans MS", "Chalkboard SE", cursive;
+}
+
 #content {
     margin-left: 200px;
 }

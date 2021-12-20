@@ -5,11 +5,11 @@ import requests
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
-from django.http import Http404, JsonResponse, HttpResponse, HttpRequest
+from django.http import Http404, JsonResponse, HttpResponse, HttpRequest, HttpResponseNotAllowed
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import BaseModelForm, LinkProtectionConfigForm, CommandForm, SpotifyForm
-from .models import Command, Klassenbuch, Timer, Config, LinkPermit, LinkWhitelist, LinkBlacklist, Spotify
+from .forms import BaseModelForm, LinkProtectionConfigForm, CommandForm, SpotifyForm, CounterForm
+from .models import Command, Klassenbuch, Timer, Config, LinkPermit, LinkWhitelist, LinkBlacklist, Spotify, Counter
 
 
 def home(request):
@@ -259,10 +259,18 @@ def commands_new(request: HttpRequest) -> HttpResponse:
 
 
 @login_required(login_url="/login")
-def commands_remove(request: HttpRequest, command_id: int) -> HttpResponse:
-    Command.objects.filter(pk=command_id).delete()
+def commands_remove(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+            command = get_object_or_404(Command, pk=payload["id"])
+            command.delete()
+        except (json.decoder.JSONDecodeError, KeyError):
+            pass
 
-    return redirect("/commands")
+        return JsonResponse({})
+
+    raise Http404
 
 
 @login_required(login_url="/login")
@@ -376,4 +384,60 @@ def spotify_login_redirect(request: HttpRequest) -> JsonResponse:
         user.save()
         return redirect(f"/spotify/edit/{user_id}")
 
+
+# </editor-fold>
+
+
+# <editor-fold desc="Counter">
+@login_required(login_url="/login")
+def counters(request: HttpRequest) -> HttpResponse:
+    return render(request, "counters/list.html",
+                  {"title": "Counter", "counters": Counter.objects.all(), "active": "counters"})
+
+
+@login_required(login_url="/login")
+def counters_new(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = CounterForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("/counters")
+
+    form = CounterForm()
+
+    return render(request, "counters/edit.html",
+                  {"title": "Counters", "form": {"form": form}})
+
+
+@login_required(login_url="/login")
+def counters_remove(request: HttpRequest) -> JsonResponse:
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+            counter = get_object_or_404(Counter, pk=payload["id"])
+            counter.delete()
+        except (json.decoder.JSONDecodeError, KeyError):
+            pass
+
+        return JsonResponse({})
+
+    raise Http404
+
+
+@login_required(login_url="/login")
+def counters_edit(request: HttpRequest, counter_id: int) -> HttpResponse:
+    counter = get_object_or_404(Counter, pk=counter_id)
+
+    if request.method == "POST":
+        form = CounterForm(request.POST, instance=counter)
+
+        if form.is_valid():
+            form.save()
+            return redirect("/counters")
+
+    form = CounterForm(instance=counter)
+
+    return render(request, "counters/edit.html",
+                  {"title": "Counters", "form": {"form": form}})
 # </editor-fold>

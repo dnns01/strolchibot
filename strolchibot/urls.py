@@ -21,16 +21,19 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', views.home, name="home"),
     path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),
     path('login/redirect/', views.login_redirect, name="login_redirect"),
     path('commands/', views.commands, name="commands"),
     path('commands/new', views.commands_new, name="commands_new"),
-    path('commands/remove/<int:command_id>', views.commands_remove, name="commands_remove"),
+    path('commands/remove', views.commands_remove, name="commands_remove"),
     path('commands/edit/<int:command_id>', views.commands_edit, name="commands_edit"),
     path('commands/active', views.commands_set_active, name="commands_set_activate"),
+    path('counters', views.counters, name="counters"),
+    path('counters/new', views.counters_new, name="counters_new"),
+    path('counters/remove', views.counters_remove, name="counters_remove"),
+    path('counters/edit/<int:counter_id>', views.counters_edit, name="counters_edit"),
     path('klassenbuch/', views.klassenbuch, name="klassenbuch"),
     path('klassenbuch/remove/<int:id>', views.klassenbuch_remove, name="klassenbuch_remove"),
     path('timers/', views.timers, name="timers"),

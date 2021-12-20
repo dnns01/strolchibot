@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Config, Command, Spotify
+from .models import Config, Command, Spotify, Counter
 
 
 class BaseModelForm(forms.ModelForm):
@@ -57,3 +57,9 @@ class SpotifyForm(BaseModelForm):
     class Meta:
         model = Spotify
         fields = ['streamer']
+
+
+class CounterForm(BaseModelForm):
+    class Meta:
+        model = Counter
+        exclude = []

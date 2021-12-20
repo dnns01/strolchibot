@@ -6,6 +6,8 @@
     {% if user.is_authenticated %}
         <a href="{% url 'commands' %}"
            class="w3-bar-item w3-button {% if title == "Commands" %}w3-light-gray{% endif %}">Commands</a>
+        <a href="{% url 'counters' %}"
+           class="w3-bar-item w3-button {% if title == "Counters" %}w3-light-gray{% endif %}">Counters</a>
         <a href="{% url 'klassenbuch' %}"
            class="w3-bar-item w3-button {% if title == "Klassenbuch" %}w3-light-gray{% endif %}">Klassenbuch</a>
         <a href="{% url 'timers' %}"
