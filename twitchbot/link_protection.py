@@ -37,7 +37,7 @@ class LinkProtection(commands.Cog):
 
     @commands.Cog.event()
     async def event_message(self, message):
-        if message.author.is_mod:
+        if not message.author or message.author.is_mod:
             return
 
         # Mods are always allowed to post links. So if we reach this point, the author of the message is not a mod,
@@ -61,7 +61,7 @@ class LinkProtection(commands.Cog):
             # Reaching this point means, that the message contains a link, the author is not a mod and Link Protection
             # is turned on. Next step is to check, if Subs are permitted to post links and if the author of the message
             # is a sub. If true, no further processing neccessary, posting a link is allowed.
-            if self.bot.is_subscriber(message.author) and config.get_bool("link_protection_permit_subs"):
+            if message.author.is_subscriber and config.get_bool("link_protection_permit_subs"):
                 return
 
             # Reaching this point means, the author is not a mod, the message contains a link and links protection is

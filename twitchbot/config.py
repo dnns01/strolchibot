@@ -14,3 +14,12 @@ def get(column):
 
 def get_bool(column):
     return get(column) == 1
+
+
+def set(column, value):
+    conn = sqlite3.connect("db.sqlite3")
+
+    c = conn.cursor()
+    c.execute(f"UPDATE strolchibot_config SET {column}='{value}' where id = 1")
+    conn.commit()
+    conn.close()

@@ -46,6 +46,7 @@ class LinkBlacklist(models.Model):
 class Config(models.Model):
     link_protection_active = models.BooleanField(default=True, verbose_name="Active")
     link_protection_permit_subs = models.BooleanField(default=True, verbose_name="Permit Subs")
+    streamer = models.TextField(max_length=20, null=True)
 
 
 class TwitchUser(models.Model):

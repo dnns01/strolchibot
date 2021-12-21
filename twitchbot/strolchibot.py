@@ -44,10 +44,6 @@ class StrolchiBot(commands.Bot, ABC):
         elif type(ctx) is Message:
             await ctx.channel.send(f".me {content}")
 
-    @staticmethod
-    def is_subscriber(user):
-        return user.badges.get("founder") is not None or user.badges.get("subscriber") is not None
-
     async def event_ready(self):
         print('Logged in')
 

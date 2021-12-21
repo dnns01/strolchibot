@@ -5,6 +5,7 @@ import sqlite3
 from twitchio.ext import commands
 
 import spotify_cog
+import config
 
 
 class Commands(commands.Cog):
@@ -43,8 +44,14 @@ class Commands(commands.Cog):
                 count = self.process_counter(tokens[0], tokens[1:])
                 text = text.replace(variable, str(count))
             elif tokens[0] == "spotify":
-                value = self.process_spotify(tokens[1], spotify)
-                text = text.replace(variable, value)
+                if value := self.process_spotify(tokens[1], spotify):
+                    text = text.replace(variable, value)
+                else:
+                    return "Woher soll ich denn wissen, was gerade läuft? Frag doch selbst nach!"
+            elif tokens[0] == "streamer":
+                streamer = self.process_streamer()
+                if streamer:
+                    text = text.replace(variable, streamer.capitalize())
 
         return text
 
@@ -66,11 +73,6 @@ class Commands(commands.Cog):
             self.set_count(counter_name, counter)
 
         return counter
-
-    def process_spotify(self, param, spotify):
-        if not spotify:
-            pass
-            # spotify = spotify_cog.
 
     def get_count(self, name):
         conn = sqlite3.connect("db.sqlite3")
@@ -94,3 +96,18 @@ class Commands(commands.Cog):
         c.execute('UPDATE strolchibot_counter set count = ? where name = ?', (count, name))
         conn.commit()
         conn.close()
+
+    def process_spotify(self, param, song):
+        if not song:
+            song = spotify_cog.get_song(self.process_streamer())
+
+        if song:
+            if value := song.get(param):
+                return value
+            else:
+                return None
+        else:
+            return None
+
+    def process_streamer(self):
+        return config.get("streamer")
