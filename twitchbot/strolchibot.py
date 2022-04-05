@@ -9,7 +9,7 @@ from twitchio import Channel, Message
 from twitchio.ext import commands
 from twitchio.ext.commands import Context
 
-import chat_commands, giveaway, klassenbuch, link_protection, spotify_cog, vote_cog
+import chat_commands, giveaway, klassenbuch, link_protection, spotify_cog, vote_cog, countdown
 
 load_dotenv()
 
@@ -34,6 +34,7 @@ class StrolchiBot(commands.Bot, ABC):
         self.add_cog(link_protection.LinkProtection(self))
         self.add_cog(giveaway.Giveaway(self))
         self.add_cog(chat_commands.Commands(self))
+        self.add_cog(countdown.Countdown(self))
 
     @staticmethod
     async def send_me(ctx, content):
