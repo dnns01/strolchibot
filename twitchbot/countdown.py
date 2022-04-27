@@ -7,7 +7,7 @@ from twitchio.ext import commands, routines
 class Countdown(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.timer.start()
+        # self.timer.start()
         self.until = datetime(year=2022, month=4, day=5, hour=20)
 
     @routines.routine(minutes=1)

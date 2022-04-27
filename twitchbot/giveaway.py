@@ -22,9 +22,16 @@ class Giveaway(commands.Cog):
                 self.giveaway_entries[ctx.author.name] = 1
 
     @commands.command(name="giveaway")
-    async def cmd_giveaway_open(self, ctx, param):
+    async def cmd_giveaway_open(self, ctx, param=None):
         """ Reset and Open the giveaway """
 
+        if param is None:
+            if self.giveaway_enabled:
+                await self.bot.send_me(ctx, "j@@@@ gerade läuft ein Giveaway. Mit !gierig kannst du ein gieriger Gierlappen sein und deinen Namen in den Lostopf werfen")
+            else:
+                await self.bot.send_me(ctx,
+                                       "Gerade läuft leider kein Giveaway. Später vielleicht")
+            return
         if ctx.author.is_mod:
             if param == "open":
                 self.giveaway_enabled = True
