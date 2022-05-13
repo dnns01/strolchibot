@@ -14,7 +14,9 @@ class Giveaway(commands.Cog):
         """ take part at the giveaway """
 
         texts = [f"{ctx.author.name} ist ein gieriger Gierlappen!", f"Geil!!! {ctx.author.name} giert hart rein!",
-                 f"So klappt es doch {ctx.author.name}! Einmal hart reingieren."]
+                 f"So klappt es doch {ctx.author.name}! Einmal hart reingieren.", 
+                 f"Spieglein, Spieglein an der Wand, wer ist am gierigsten im ganzen Land? Oh Königin {ctx.author.name} giert am härtesten hier.",
+                 f"GIERMASTER3000 {ctx.author.name} ist am Start!"]
 
         if self.giveaway_enabled:
             if self.giveaway_entries.get(ctx.author.name) != 1:
