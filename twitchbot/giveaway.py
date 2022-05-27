@@ -65,7 +65,7 @@ class Giveaway(commands.Cog):
                 else:
                     await self.bot.send_announce(ctx, "Niemand in der Lostrommel, um gezogen zu werden..")
 
-    @routines.routine(minutes=1)
+    @routines.routine(minutes=5)
     async def giveaway_loop(self):
         if self.just_started:
             self.just_started = False
