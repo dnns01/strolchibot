@@ -14,8 +14,9 @@ class Giveaway(commands.Cog):
     async def cmd_giveaway(self, ctx):
         """ take part at the giveaway """
 
-        texts = [f"{ctx.author.name} ist ein gieriger Gierlappen!", f"Geil!!! {ctx.author.name} giert hart rein!",
-                 f"So klappt es doch {ctx.author.name}! Einmal hart reingieren."]
+        texts = [f"{ctx.author.name} ist ein strolchG ieriger strolchG ierlappen!",
+                 f"Geil!!! {ctx.author.name} strolchG iert hart rein!",
+                 f"So klappt es doch {ctx.author.name}! Einmal hart rein strolchG ieren."]
 
         if self.giveaway_enabled:
             if self.giveaway_entries.get(ctx.author.name) != 1:
@@ -30,9 +31,10 @@ class Giveaway(commands.Cog):
             if self.giveaway_enabled:
                 entry_count = len(self.giveaway_entries)
                 await self.bot.send_me(ctx,
-                                       f"j@@@@ gerade läuft ein Giveaway. Sei auch du ein gieriger Gierlappen, indem "
+                                       f"j@@@@ gerade läuft ein strolchG iveaway. Sei auch du ein strolchG ieriger strolchG ierlappen, indem "
                                        f"du !gierig in den Chat schreibst. Es haben bereits {entry_count} andere hart "
                                        f"reingegiert!")
+
             else:
                 await self.bot.send_me(ctx,
                                        "Gerade läuft leider kein Giveaway. Später vielleicht")
