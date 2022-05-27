@@ -1,6 +1,6 @@
 import random
 
-from twitchio.ext import commands
+from twitchio.ext import commands, routines
 
 
 class Giveaway(commands.Cog):
@@ -8,6 +8,7 @@ class Giveaway(commands.Cog):
         self.bot = bot
         self.giveaway_enabled = False
         self.giveaway_entries = {}
+        self.just_started = False
 
     @commands.command(name="gierig")
     async def cmd_giveaway(self, ctx):
@@ -27,7 +28,11 @@ class Giveaway(commands.Cog):
 
         if param is None:
             if self.giveaway_enabled:
-                await self.bot.send_me(ctx, "j@@@@ gerade läuft ein Giveaway. Mit !gierig kannst du ein gieriger Gierlappen sein und deinen Namen in den Lostopf werfen")
+                entry_count = len(self.giveaway_entries)
+                await self.bot.send_me(ctx,
+                                       f"j@@@@ gerade läuft ein Giveaway. Sei auch du ein gieriger Gierlappen, indem "
+                                       f"du !gierig in den Chat schreibst. Es haben bereits {entry_count} andere hart "
+                                       f"reingegiert!")
             else:
                 await self.bot.send_me(ctx,
                                        "Gerade läuft leider kein Giveaway. Später vielleicht")
@@ -36,17 +41,35 @@ class Giveaway(commands.Cog):
             if param == "open":
                 self.giveaway_enabled = True
                 self.giveaway_entries = {}
-                await self.bot.send_me(ctx,
-                                       "Das Giveaway wurde gestartet. Schreibe !gierig in den Chat um daran teilzunehmen.")
+                self.just_started = True
+                self.giveaway_loop.start()
+                await self.bot.send_announce(ctx,
+                                             "Das Giveaway wurde gestartet. Schreibe !gierig in den Chat um daran "
+                                             "teilzunehmen.")
             elif param == "close":
                 self.giveaway_enabled = False
-                await self.bot.send_me(ctx, "Das Giveaway wurde geschlossen. Es kann niemand mehr teilnehmen.")
+                self.giveaway_loop.stop()
+                await self.bot.send_announce(ctx, "Das Giveaway wurde geschlossen. Es kann niemand mehr teilnehmen.")
             elif param == "draw":
-                if len(self.giveaway_entries) > 0:
+                entry_count = len(self.giveaway_entries)
+                if entry_count > 0:
                     winner = random.choice(list(self.giveaway_entries))
-                    entry_count = len(self.giveaway_entries)
                     del self.giveaway_entries[winner]
-                    await self.bot.send_me(ctx,
-                                           f"Es wurde aus {entry_count} Einträgen ausgelost. Und der Gewinner ist... @{winner}")
+                    msg = f"Es wurde aus {entry_count} Einträgen ausgelost. Und der Gewinner ist... @{winner}" \
+                        if entry_count == 1 \
+                        else f"Es gab nur eine Person im Lostopf. Natürlich ist der Gewinner @{winner}... " \
+                             f"Woooow... was eine Überraschung"
+                    await self.bot.send_announce(ctx, msg)
                 else:
-                    await self.bot.send_me(ctx, "Es muss Einträge geben, damit ein Gewinner gezogen werden kann.")
+                    await self.bot.send_announce(ctx, "Niemand in der Lostrommel, um gezogen zu werden..")
+
+    @routines.routine(minutes=1)
+    async def giveaway_loop(self):
+        if self.just_started:
+            self.just_started = False
+        else:
+            entry_count = len(self.giveaway_entries)
+            await self.bot.send_announce(self.bot.channel(),
+                                         f"Einfach nur Krank!!! Hier wird schon wieder übelster Schrott rausgehauen. "
+                                         f"Es haben bereits {entry_count} Zuschis ihren Namen in den Lostopf geworfen. "
+                                         f"Schreibe JETZT !gierig in den Chat, um auch am Giveaway teilzunehmen!")

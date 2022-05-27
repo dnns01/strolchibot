@@ -32,19 +32,19 @@ class VoteCog(commands.Cog):
         if self.vote_blocked and datetime.now() >= self.vote_blocked:
             self.vote_blocked = None
 
-    async def notify_vote_result(self, message, final_result=False):
+    async def notify_vote_result(self, channel, final_result=False):
         if len(self.votes) < self.MIN_VOTES:
             return
 
         votes_list = self.get_votes()
 
-        output = f'{self.PLUS} {votes_list[0][0]} ({votes_list[0][1]}%), ' \
-                 f'{self.NEUTRAL} {votes_list[1][0]} ({votes_list[1][1]}%), ' \
-                 f'{self.MINUS} {votes_list[2][0]} ({votes_list[2][1]}%) | '
-        output += f'Endergebnis' if final_result else f'Zwischenergebnis'
-        output += f' mit insgesamt {len(self.votes)} abgegebenen Stimmen'
+        msg = f'{self.PLUS} {votes_list[0][0]} ({votes_list[0][1]}%), ' \
+              f'{self.NEUTRAL} {votes_list[1][0]} ({votes_list[1][1]}%), ' \
+              f'{self.MINUS} {votes_list[2][0]} ({votes_list[2][1]}%) | '
+        msg += f'Endergebnis' if final_result else f'Zwischenergebnis '
+        msg += f'mit insgesamt {len(self.votes)} abgegebenen Stimmen'
 
-        await self.bot.send_me(message, output)
+        await self.bot.send_announce(channel, msg)
 
     def get_votes(self):
         """analyzes the votes-dict and counts the votes"""
