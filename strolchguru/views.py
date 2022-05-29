@@ -76,7 +76,7 @@ def clips(request) -> HttpResponse:
     page = request.GET.get("page", "1")
     allow_edit = request.user.is_authenticated
     clips = Clip.objects.filter(is_downloaded=True).order_by("-created_at")
-    if not (isinstance(request.user, TwitchUser) and request.user.is_mod and request.user.is_admin):
+    if not (isinstance(request.user, TwitchUser) and (request.user.is_mod or request.user.is_admin)):
         clips = clips.filter(is_published=True)
 
     form = ClipSearchForm(request.GET)
