@@ -128,3 +128,39 @@ function counterRemove(counter_id) {
         body: JSON.stringify(payload)
     }).then(response => response.json()).then(data => location.reload());
 }
+
+function setVisible(clip_id, visible) {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let payload = {
+        id: clip_id,
+        visible: visible
+    };
+
+    fetch('/strolchguru/clips/visible', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload)
+    }).then(response => response.json()).then(data => location.reload());
+}
+
+function setInLoop(clip_id, visible) {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let payload = {
+        id: clip_id,
+        in_loop: visible
+    };
+
+    fetch('/strolchguru/clips/in_loop', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload)
+    }).then(response => response.json()).then(data => location.reload());
+}

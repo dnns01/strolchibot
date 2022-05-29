@@ -1,3 +1,4 @@
+import json
 import random
 import re
 
@@ -6,7 +7,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms import modelformset_factory
 from django.forms.models import model_to_dict
-from django.http import HttpResponse, JsonResponse, Http404
+from django.http import HttpResponse, JsonResponse, Http404, HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 
 from strolchibot.forms import BaseModelForm
@@ -35,7 +36,7 @@ def get_pages(page, num_pages):
 
 def home(request) -> HttpResponse:
     controls = True if request.GET.get("controls") == "1" else False
-    clips = Clip.objects.filter(is_published=True, is_downloaded=True)
+    clips = Clip.objects.filter(is_published=True, is_downloaded=True, is_in_loop=True)
     clip = random.choice(list(clips))
     return render(request, 'strolchguru_home.html',
                   context={'clip': clip, 'mode': "random_clips", 'controls': controls})
@@ -82,7 +83,8 @@ def clips(request) -> HttpResponse:
     if form.is_valid():
         search = form.cleaned_data["search"]
         clips = clips.filter(
-            Q(title__icontains=search) | Q(curator__icontains=search) | Q(tags__name__icontains=search)).distinct()
+            Q(title__icontains=search) | Q(curator__icontains=search) | Q(tags__name__icontains=search) | Q(
+                category__icontains=search)).distinct()
 
     else:
         clips = None
@@ -145,3 +147,39 @@ def tags_remove(request, id):
     Tag.objects.filter(pk=id).delete()
 
     return redirect("tags")
+
+
+@login_required(login_url="/login")
+def clip_set_visible(request: HttpRequest) -> JsonResponse:
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+            clip = get_object_or_404(Clip, pk=payload["id"])
+            if payload.get("visible"):
+                clip.show()
+            else:
+                clip.hide()
+        except (json.decoder.JSONDecodeError, KeyError):
+            pass
+
+        return JsonResponse({})
+
+    raise Http404
+
+
+@login_required(login_url="/login")
+def clip_set_in_loop(request: HttpRequest) -> JsonResponse:
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+            clip = get_object_or_404(Clip, pk=payload["id"])
+            if payload.get("in_loop"):
+                clip.add_to_loop()
+            else:
+                clip.remove_from_loop()
+        except (json.decoder.JSONDecodeError, KeyError):
+            pass
+
+        return JsonResponse({})
+
+    raise Http404

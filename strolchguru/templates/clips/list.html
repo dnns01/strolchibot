@@ -17,42 +17,72 @@
 {% endblock %}
 
 {% block content %}
-    {% for clip in clips %}
-        <div class="w3-card w3-white clip-card"
-             style="width: 480px; padding: 10px; box-sizing: content-box; float: left; margin-right: 10px; height:400px; overflow: hidden;">
-            <div style="height: 272px; width: 480px; position: relative">
-                <a href="{% url "clip" clip.id %}?controls=1">
-                    <img src="/media/clips/{{ clip.clip_id }}.jpg"
-                         alt="Thumbnail for clip with title {{ clip.display_title }}"/>
-                </a>
-                <span
-                        style="position: absolute; left: 0; top: 0; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.created_at|date:"j.m.Y H:i" }}</span>
-                <span
-                        style="position: absolute; right: 0; bottom: 0; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.duration }}
-                    sec
-                </span>
-                <span
-                        style="position: absolute; left: 0; bottom: 0; color: white; background: rgba(0,0,0,0.6); border-radius: 0.2rem; padding: 5px; margin: 5px;">{{ clip.curator }}</span>
-            </div>
-            <div class="w3-display-container">
-                <p class="w3-bold">{{ clip.display_title }}</p>
-
-                {% if allow_edit %}
-                    <a href="{% url "clip_edit" clip.id %}"
-                       class="w3-button w3-strolchpink w3-display-topright clip-edit"><em
-                            class="fas fa-pencil-alt"></em></a>
-                {% endif %}
-            </div>
-
-            <p>
-                {% for tag in clip.tags.all %}
-                    <a href="{% url "clips" %}?search={{ tag.name }}" style="text-decoration: none;">
-                        <span class="w3-tag w3-round w3-strolchpink">{{ tag.name }}</span>
+    {% csrf_token %}
+    <div class="clip-list">
+        {% for clip in clips %}
+            <div class="w3-card w3-white clip-card">
+                <div class="clip-thumbnail w3-display-container">
+                    <a href="{% url "clip" clip.id %}?controls=1">
+                        <img src="/media/clips/{{ clip.clip_id }}.jpg"
+                             alt="Thumbnail for clip with title {{ clip.display_title }}"/>
                     </a>
-                {% endfor %}
-            </p>
-        </div>
-    {% endfor %}
+                    <span class="w3-display-topleft">{{ clip.created_at|date:"j.m.Y H:i" }}</span>
+                    <span class="w3-display-bottomright">{{ clip.duration }} sec</span>
+                    <span class="w3-display-bottomleft">{{ clip.curator }}</span>
+                </div>
+                <div class="w3-display-container">
+                    <div class="w3-display-container clip-info">
+                        <p class="clip-title">
+                            {% if clip.category %}
+                                {{ clip.category }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </p>
+                        <p class="w3-bold">{{ clip.display_title }}</p>
+                    </div>
+                    {% if allow_edit %}
+                        <div class="w3-display-topright clip-edit-buttons">
+                            <a href="{% url "clip_edit" clip.id %}" class="w3-button w3-strolchpink clip-edit"
+                               title="Edit">
+                                <em class="fas fa-pencil-alt"></em>
+                            </a>
+                            {% if clip.is_in_loop %}
+                                <a href="#" class="w3-button w3-strolchpink" onclick="setInLoop({{ clip.id }}, false)"
+                                   title="Remove from Loop">
+                                    <em class="fas fa-ban"></em>
+                                </a>
+                            {% else %}
+                                <a href="#" class="w3-button w3-strolchgray" onclick="setInLoop({{ clip.id }}, true)"
+                                   title="Add to Loop">
+                                    <em class="fas fa-sync-alt"></em>
+                                </a>
+                            {% endif %}
+                            {% if clip.is_published %}
+                                <a href="#" class="w3-button w3-strolchpink" onclick="setVisible({{ clip.id }}, false)"
+                                   title="Hide">
+                                    <em class="fas fa-eye-slash"></em>
+                                </a>
+                            {% else %}
+                                <a href="#" class="w3-button w3-strolchgray" onclick="setVisible({{ clip.id }}, true)"
+                                   title="Show">
+                                    <em class="fas fa-eye"></em>
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <p>
+                    {% for tag in clip.tags.all %}
+                        <a href="{% url "clips" %}?search={{ tag.name }}" style="text-decoration: none;">
+                            <span class="w3-tag w3-round w3-strolchpink">{{ tag.name }}</span>
+                        </a>
+                    {% endfor %}
+                </p>
+            </div>
+        {% endfor %}
+    </div>
     <div class="w3-container w3-center w3-margin-bottom">
         <div id="pagination" class="w3-bar w3-border w3-round">
             {% for p in pages %}

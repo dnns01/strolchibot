@@ -1,9 +1,9 @@
 @font-face {
-  font-family: 'Chalkboard SE';
-  /*font-style: normal;*/
-  /*font-weight: 400;*/
-  /*font-display: block;*/
-  src: url("../webfonts/chalkboard-se-regular.ttf") format("truetype");
+    font-family: 'Chalkboard SE';
+    /*font-style: normal;*/
+    /*font-weight: 400;*/
+    /*font-display: block;*/
+    src: url("../webfonts/chalkboard-se-regular.ttf") format("truetype");
 }
 
 *, h1, h2, h3, h4, h5 {
@@ -43,9 +43,9 @@
     margin-right: 120px;
 }
 
-.w3-display-topright .w3-button {
-    margin-right: 1em;
-}
+/*.w3-display-topright .w3-button {*/
+/*    margin-right: 1em;*/
+/*}*/
 
 .w3-form-bar-item {
     width: 100%;
@@ -163,4 +163,56 @@ ul.w3-multiple-choice label {
 
 .edit-form {
     margin: 5px;
+}
+
+.clip-title {
+    margin-bottom: 0;
+    font-size: small;
+    color: gray;
+}
+
+.clip-title + p {
+    margin-top: 0;
+}
+
+.clip-info {
+    margin-right: 50px;
+}
+
+.clip-edit-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.clip-edit-buttons a {
+    margin-bottom: 5px;
+}
+
+.clip-card {
+    width: 480px;
+    padding: 10px;
+    box-sizing: content-box;
+    margin-right: 10px;
+    height: 410px;
+    overflow: hidden;
+}
+
+.clip-thumbnail {
+    height: 272px;
+    width: 480px;
+    position: relative
+}
+
+.clip-thumbnail > span {
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 0.2rem;
+    padding: 5px;
+    margin: 5px;
+}
+
+.clip-list {
+    display: flex;
+    flex-wrap: wrap
 }

@@ -24,6 +24,8 @@ urlpatterns = [
     path('<int:id>/json', views.clip_json, name="clip_json"),
     path('clips', views.clips, name="clips"),
     path('clips/edit/<int:clip_id>', views.clip_edit, name="clip_edit"),
+    path('clips/visible', views.clip_set_visible, name="clip_set_visible"),
+    path('clips/in_loop', views.clip_set_in_loop, name="clip_set_in_loop"),
     path('tags', views.tags, name="tags"),
     path('tags/remove/<int:id>', views.tags_remove, name="tags_remove"),
 ]

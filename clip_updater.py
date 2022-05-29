@@ -19,6 +19,9 @@ query($after: Cursor) {
                     url
                     embedURL
                     slug
+                    game {
+                        displayName
+                    }
                     thumbnailURL(width: 480, height: 272)
                     curator {
                         displayName
@@ -35,8 +38,8 @@ query($after: Cursor) {
 
 
 def get_clip(cursor, clip_id: int):
-    cursor.execute('SELECT id, title, clip_id, url, embed_url, slug, thumbnail_url, curator, clip_url, is_published, '
-                   'created_at, custom_title, duration, is_downloaded FROM strolchguru_clip '
+    cursor.execute('SELECT id, title, clip_id, url, embed_url, slug, thumbnail_url, category, curator, clip_url, '
+                   'is_published, created_at, custom_title, duration, is_downloaded, is_in_loop FROM strolchguru_clip '
                    'WHERE clip_id = ?', (clip_id,))
     clip = cursor.fetchone()
 
@@ -48,13 +51,15 @@ def get_clip(cursor, clip_id: int):
         "embed_url": clip[4],
         "slug": clip[5],
         "thumbnail_url": clip[6],
-        "curator": clip[7],
-        "clip_url": clip[8],
-        "is_published": clip[9],
-        "created_ad": clip[10],
-        "custom_title": clip[11],
-        "duration": clip[12],
-        "is_downloaded": clip[13]
+        "category": clip[7],
+        "curator": clip[8],
+        "clip_url": clip[9],
+        "is_published": clip[10],
+        "created_ad": clip[11],
+        "custom_title": clip[12],
+        "duration": clip[13],
+        "is_downloaded": clip[14],
+        "is_in_loop": clip[15],
     }
 
 
@@ -70,6 +75,7 @@ def save_clips(clips):
             embed_url = node["embedURL"]
             slug = node["slug"]
             thumbnail_url = node["thumbnailURL"]
+            category = node["game"]["displayName"] if node.get("game") else None
             curator = node["curator"]["displayName"] if node["curator"] else "Frag mich mal was leichteres"
             clip_url = thumbnail_url.split("-preview-")[0] + ".mp4"
             created_at = node["createdAt"]
@@ -77,16 +83,17 @@ def save_clips(clips):
 
             if clip := get_clip(c, clip_id):
                 c.execute('UPDATE strolchguru_clip SET title = ?, url = ?, embed_url = ?, slug = ?, thumbnail_url = ?, '
-                          'curator = ?, clip_url = ?, is_published = ?, created_at = ?, duration = ? WHERE clip_id = ?',
-                          (title, url, embed_url, slug, thumbnail_url, curator, clip_url, True, created_at, duration,
-                           clip_id))
+                          'category = ?, curator = ?, clip_url = ?, created_at = ?, duration = ? '
+                          'WHERE clip_id = ?',
+                          (title, url, embed_url, slug, thumbnail_url, category, curator, clip_url, created_at,
+                           duration, clip_id))
             else:
                 c.execute(
-                    'INSERT INTO strolchguru_clip (title, clip_id, url, embed_url, slug, thumbnail_url, curator, '
-                    'clip_url, is_published, created_at, duration, is_downloaded) '
-                    'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                    (title, clip_id, url, embed_url, slug, thumbnail_url, curator, clip_url, True, created_at, duration,
-                     False))
+                    'INSERT INTO strolchguru_clip (title, clip_id, url, embed_url, slug, thumbnail_url, category, '
+                    'curator, clip_url, created_at, duration, is_downloaded, is_published, is_in_loop) '
+                    'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    (title, clip_id, url, embed_url, slug, thumbnail_url, category, curator, clip_url, created_at,
+                     duration, False, True, True))
 
     conn.commit()
     conn.close()
