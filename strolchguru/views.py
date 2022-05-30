@@ -1,3 +1,4 @@
+import datetime
 import json
 import random
 import re
@@ -9,6 +10,7 @@ from django.forms import modelformset_factory
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, JsonResponse, Http404, HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models.functions import Now
 
 from strolchibot.forms import BaseModelForm
 from strolchibot.models import TwitchUser
@@ -34,19 +36,33 @@ def get_pages(page, num_pages):
         return range(start_page, end_page + 1)
 
 
+def get_clip_in_loop(tag: str = None):
+    # Get all clips, that are allowed to be played in loop. If tag is specified, also filtered by tag
+    clips = Clip.objects.filter(is_published=True, is_downloaded=True, is_in_loop=True).order_by("last_played")
+    if tag:
+        clips = clips.filter(tags__name=tag)
+
+    # Get first half of clips. This will "guarantee", that clips are played more randomly
+    clips = list(clips)
+    clips = clips[:len(clips)//2]
+
+    clip = random.SystemRandom().choice(clips)
+    clip.last_played = Now()
+    clip.save()
+
+    return clip
+
+
 def home(request) -> HttpResponse:
     controls = True if request.GET.get("controls") == "1" else False
-    clips = Clip.objects.filter(is_published=True, is_downloaded=True, is_in_loop=True)
-    clip = random.choice(list(clips))
+    clip = get_clip_in_loop()
     return render(request, 'strolchguru_home.html',
                   context={'clip': clip, 'mode': "random_clips", 'controls': controls})
 
 
 def home_tag(request, tag) -> HttpResponse:
     controls = True if request.GET.get("controls") == "1" else False
-    clips = Clip.objects.filter(is_published=True, is_downloaded=True, tags__name=tag)
-    if clips:
-        clip = random.choice(list(clips))
+    if clip := get_clip_in_loop(tag=tag):
         return render(request, 'strolchguru_home.html',
                       context={'clip': clip, 'mode': "random_clips", 'controls': controls})
     else:

@@ -18,6 +18,7 @@ class Clip(models.Model):
     is_downloaded = models.BooleanField(default=False)
     is_in_loop = models.BooleanField(default=True)
     tags = models.ManyToManyField("Tag", blank=True)
+    last_played = models.DateTimeField(null=True)
 
     @property
     def display_title(self):
