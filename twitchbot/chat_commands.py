@@ -10,6 +10,17 @@ import config
 DB_PATH = "db.sqlite3"
 
 
+def check_permissions(message, permissions):
+    if permissions == "EO":
+        return True
+    elif permissions == "SUB":
+        return message.author.is_subscriber or message.author.is_mod
+    elif permissions == "MOD":
+        return message.author.is_mod
+
+    return False
+
+
 class Commands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -27,13 +38,15 @@ class Commands(commands.Cog):
             conn = sqlite3.connect(DB_PATH)
 
             c = conn.cursor()
-            c.execute('SELECT text from strolchibot_command where command = ? and active is true', (command,))
-            texts = c.fetchall()
+            c.execute('SELECT text, permissions from strolchibot_command where command = ? and active is true',
+                      (command,))
+            eligible_commands = c.fetchall()
             conn.close()
-            if len(texts) > 0:
-                text = random.choice(texts)[0]
-                text = self.process_variables(text, args)
-                await message.channel.send(text)
+            if len(eligible_commands) > 0:
+                cmd = random.choice(eligible_commands)
+                if check_permissions(message, cmd[1]):
+                    text = self.process_variables(cmd[0], args)
+                    await message.channel.send(text)
 
     def process_variables(self, text, args):
         variables = re.findall("\{[\w\d\s+-]+}", text)

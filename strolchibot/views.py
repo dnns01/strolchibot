@@ -207,7 +207,7 @@ def exchange_code(code):
 @login_required(login_url="/login")
 def commands(request: HttpRequest) -> HttpResponse:
     return render(request, "commands/list.html",
-                  {"title": "Commands", "commands": Command.objects.all(), "active": "commands"})
+                  {"title": "Commands", "commands": Command.objects.all().order_by("command"), "active": "commands"})
 
 
 @login_required(login_url="/login")

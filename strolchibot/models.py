@@ -7,8 +7,11 @@ from .managers import TwitchUserManager
 
 
 class Command(models.Model):
+    PERMISSION_CHOICES = (("EO", "Everyone"), ("SUB", "Subscriber"), ("MOD", "Moderator"))
+
     command = models.CharField(max_length=20)
     text = models.TextField(max_length=500)
+    permissions = models.CharField(max_length=5, choices=PERMISSION_CHOICES, default="EO")
     active = models.BooleanField(default=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):

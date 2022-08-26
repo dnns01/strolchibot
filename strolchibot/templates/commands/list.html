@@ -22,7 +22,7 @@
                     <tr>
                         <td>{{ command.command }}</td>
                         <td>{{ command.text }}</td>
-                        <td>Everyone</td>
+                        <td>{{ command.get_permissions_display }}</td>
                         <td>
                             <label class="switch">
                                 <input class="w3-switch" type="checkbox" {% if command.active %}checked{% endif %}
