@@ -7,6 +7,8 @@ from twitchio.ext import commands
 import spotify_cog
 import config
 
+DB_PATH = "db.sqlite3"
+
 
 class Commands(commands.Cog):
     def __init__(self, bot):
@@ -22,7 +24,7 @@ class Commands(commands.Cog):
             command = msg[0][1:]
             args = msg[1:]
 
-            conn = sqlite3.connect("db.sqlite3")
+            conn = sqlite3.connect(DB_PATH)
 
             c = conn.cursor()
             c.execute('SELECT text from strolchibot_command where command = ? and active is true', (command,))
@@ -39,7 +41,6 @@ class Commands(commands.Cog):
 
         for variable in variables:
             tokens = variable[1:-1].split()
-            print(tokens[4:])
             if tokens[0] == "count" or tokens[0] == "getcount":
                 count = self.process_counter(tokens[0], tokens[1:])
                 text = text.replace(variable, str(count))
@@ -52,7 +53,10 @@ class Commands(commands.Cog):
                 streamer = self.process_streamer()
                 if streamer:
                     text = text.replace(variable, streamer.capitalize())
-
+            elif tokens[0] == "args" and len(tokens) == 2:
+                arg = self.process_args(args, tokens[1])
+                if arg:
+                    text = text.replace(variable, arg)
         return text
 
     def process_counter(self, var_name, params):
@@ -75,7 +79,7 @@ class Commands(commands.Cog):
         return counter
 
     def get_count(self, name):
-        conn = sqlite3.connect("db.sqlite3")
+        conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         c.execute('SELECT count from strolchibot_counter where name = ?', (name,))
         count = c.fetchone()
@@ -83,7 +87,7 @@ class Commands(commands.Cog):
         if count:
             return count[0]
         else:
-            conn = sqlite3.connect("db.sqlite3")
+            conn = sqlite3.connect(DB_PATH)
             c = conn.cursor()
             c.execute('INSERT INTO strolchibot_counter(name, count) VALUES (?, ?)', (name, 0))
             conn.commit()
@@ -91,7 +95,7 @@ class Commands(commands.Cog):
             return 0
 
     def set_count(self, name, count):
-        conn = sqlite3.connect("db.sqlite3")
+        conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         c.execute('UPDATE strolchibot_counter set count = ? where name = ?', (count, name))
         conn.commit()
@@ -111,3 +115,14 @@ class Commands(commands.Cog):
 
     def process_streamer(self):
         return config.get("streamer")
+
+    def process_args(self, args, index):
+        try:
+            index = int(index)
+        except ValueError:
+            index = 0
+
+        if len(args) > index:
+            return args[0]
+
+        return None
