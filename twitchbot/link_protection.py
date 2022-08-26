@@ -71,7 +71,7 @@ class LinkProtection(commands.Cog):
                 return
 
             # Ok, we reached this point! Time for action!!!
-            await message.channel.timeout(message.author.name, 1)
+            await message.channel.send(f"/delete {message.id}")
 
     def is_user_whitelisted(self, user):
         if self.has_user_permanent_permit(user):
