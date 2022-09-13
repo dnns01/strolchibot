@@ -58,7 +58,7 @@ class Giveaway(commands.Cog):
                     winner = random.choice(list(self.giveaway_entries))
                     del self.giveaway_entries[winner]
                     msg = f"Es wurde aus {entry_count} Einträgen ausgelost. Und der Gewinner ist... @{winner}" \
-                        if entry_count == 1 \
+                        if entry_count > 1 \
                         else f"Es gab nur eine Person im Lostopf. Natürlich ist der Gewinner @{winner}... " \
                              f"Woooow... was eine Überraschung"
                     await self.bot.send_announce(ctx, msg)
@@ -67,11 +67,12 @@ class Giveaway(commands.Cog):
 
     @routines.routine(minutes=5)
     async def giveaway_loop(self):
-        if self.just_started:
-            self.just_started = False
-        else:
-            entry_count = len(self.giveaway_entries)
-            await self.bot.send_announce(self.bot.channel(),
-                                         f"Einfach nur Krank!!! Hier wird schon wieder übelster Schrott rausgehauen. "
-                                         f"Es haben bereits {entry_count} Zuschis ihren Namen in den Lostopf geworfen. "
-                                         f"Schreibe JETZT !gierig in den Chat, um auch am Giveaway teilzunehmen!")
+        if self.giveaway_enabled:
+            if self.just_started:
+                self.just_started = False
+            else:
+                entry_count = len(self.giveaway_entries)
+                await self.bot.send_announce(self.bot.channel(),
+                                             f"Einfach nur Krank!!! Hier wird schon wieder übelster Schrott rausgehauen. "
+                                             f"Es haben bereits {entry_count} Zuschis ihren Namen in den Lostopf geworfen. "
+                                             f"Schreibe JETZT !gierig in den Chat, um auch am Giveaway teilzunehmen!")
