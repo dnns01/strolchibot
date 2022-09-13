@@ -26,7 +26,7 @@
                         <img src="/media/clips/{{ clip.clip_id }}.jpg"
                              alt="Thumbnail for clip with title {{ clip.display_title }}"/>
                     </a>
-                    <span class="w3-display-topleft">{{ clip.created_at|date:"j.m.Y H:i" }}</span>
+                    <span class="w3-display-topleft">{{ clip.created_at|date:"d.m.Y H:i" }}</span>
                     <span class="w3-display-bottomright">{{ clip.duration }} sec</span>
                     <span class="w3-display-bottomleft">{{ clip.curator }}</span>
                 </div>
