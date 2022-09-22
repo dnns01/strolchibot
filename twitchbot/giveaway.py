@@ -14,9 +14,11 @@ class Giveaway(commands.Cog):
     async def cmd_giveaway(self, ctx):
         """ take part at the giveaway """
 
-        texts = [f"{ctx.author.name} ist ein strolchG ieriger strolchG ierlappen!",
+        texts = [f"{ctx.author.name} ist ein strolchG ieriger strolchG ierlappen!", 
                  f"Geil!!! {ctx.author.name} strolchG iert hart rein!",
-                 f"So klappt es doch {ctx.author.name}! Einmal hart rein strolchG ieren."]
+                 f"So klappt es doch {ctx.author.name}! Einmal hart rein strolchG ieren.", 
+                 f"Spieglein, Spieglein an der Wand, wer ist am strolchG ierigsten im ganzen Land? Oh Königin {ctx.author.name} strolchG iert am härtesten hier.",
+                 f"strolchG IERMASTER3000 {ctx.author.name} ist am Start!"]
 
         if self.giveaway_enabled:
             if self.giveaway_entries.get(ctx.author.name) != 1:
