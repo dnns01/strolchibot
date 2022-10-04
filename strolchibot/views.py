@@ -8,7 +8,8 @@ from django.forms import modelformset_factory, modelform_factory
 from django.http import Http404, JsonResponse, HttpResponse, HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import BaseModelForm, LinkProtectionConfigForm, CommandForm, SpotifyForm, CounterForm
+from .forms import BaseModelForm, LinkProtectionConfigForm, CommandForm, SpotifyForm, CounterForm, TimerForm, \
+    TimerConfigForm
 from .models import Command, Klassenbuch, Timer, Config, LinkPermit, LinkWhitelist, LinkBlacklist, Spotify, Counter
 
 
@@ -42,28 +43,6 @@ def klassenbuch_remove(request, id):
     Klassenbuch.objects.filter(pk=id).delete()
 
     return redirect("/klassenbuch")
-
-
-@login_required(login_url="/login")
-def timers(request):
-    TimerFormSet = modelformset_factory(Timer, form=BaseModelForm, fields=("text", "active"))
-    if request.method == "POST":
-        formset = TimerFormSet(request.POST, request.FILES)
-        if formset.is_valid():
-            formset.save()
-
-    forms = {
-        "Basic Configuration": {
-            "display": "card",
-            "type": "formset",
-            "name": "timers",
-            "formset": TimerFormSet(),
-            "remove_url": "timers_remove",
-            "activate_url": "timers_activate",
-        },
-    }
-
-    return render(request, "form.html", {"title": "Timers", "forms": forms, "active": "timers"})
 
 
 @login_required(login_url="/login")
@@ -355,7 +334,7 @@ def spotify_login_redirect(request: HttpRequest) -> JsonResponse:
 # </editor-fold>
 
 
-# <editor-fold desc="Counter">
+# <editor-fold desc="Counters">
 @login_required(login_url="/login")
 def counters(request: HttpRequest) -> HttpResponse:
     return render(request, "counters/list.html",
@@ -407,4 +386,88 @@ def counters_edit(request: HttpRequest, counter_id: int) -> HttpResponse:
 
     return render(request, "counters/edit.html",
                   {"title": "Counters", "form": {"form": form}})
+
+
+# </editor-fold>
+
+
+# <editor-fold desc="Timers">
+@login_required(login_url="/login")
+def timers(request: HttpRequest) -> HttpResponse:
+    config = Config.objects.first()
+
+    if request.method == "POST":
+        form = TimerConfigForm(request.POST, instance=config)
+
+        if form.is_valid():
+            form.save()
+
+    form =  TimerConfigForm(instance=config)
+
+    return render(request, "timers/list.html",
+                  {"title": "Timers", "timers": Timer.objects.all(), "form": form, "active": "timers"})
+
+
+@login_required(login_url="/login")
+def timers_new(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = TimerForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("/timers")
+
+    form = TimerForm()
+
+    return render(request, "timers/edit.html",
+                  {"title": "Timers", "form": {"form": form}})
+
+
+@login_required(login_url="/login")
+def timers_remove(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+            timer = get_object_or_404(Timer, pk=payload["id"])
+            timer.delete()
+        except (json.decoder.JSONDecodeError, KeyError):
+            pass
+
+        return JsonResponse({})
+
+    raise Http404
+
+
+@login_required(login_url="/login")
+def timers_edit(request: HttpRequest, timer_id: int) -> HttpResponse:
+    timer = get_object_or_404(Timer, pk=timer_id)
+
+    if request.method == "POST":
+        form = TimerForm(request.POST, instance=timer)
+
+        if form.is_valid():
+            form.save()
+            return redirect("/timers")
+
+    form = TimerForm(instance=timer)
+
+    return render(request, "timers/edit.html",
+                  {"title": "Timers", "form": {"form": form}})
+
+
+@login_required(login_url="/login")
+def timers_set_active(request: HttpRequest) -> JsonResponse:
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+            timer = get_object_or_404(Timer, id=payload["timer"])
+            timer.active = payload["active"]
+            timer.save()
+
+            return JsonResponse({"active": timer.active})
+        except (json.decoder.JSONDecodeError, KeyError):
+            pass
+
+    raise Http404
+
 # </editor-fold>

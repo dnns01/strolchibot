@@ -164,3 +164,40 @@ function setInLoop(clip_id, visible) {
         body: JSON.stringify(payload)
     }).then(response => response.json()).then(data => location.reload());
 }
+
+
+function timerSetActive(checkbox, timer) {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let payload = {
+        timer: timer,
+        active: checkbox.checked
+    };
+
+    fetch('/timers/active', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload)
+    }).then(response => response.json()).then(data => checkbox.checked = data.active);
+}
+
+
+function timerRemove(timer_id) {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let payload = {
+        id: timer_id
+    };
+
+    fetch('/timers/remove', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload)
+    }).then(response => response.json()).then(data => location.reload());
+}

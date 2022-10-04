@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Config, Command, Spotify, Counter
+from .models import Config, Command, Spotify, Counter, Timer
 
 
 class BaseModelForm(forms.ModelForm):
@@ -36,6 +36,18 @@ class LinkProtectionConfigForm(BaseModelForm):
 class CommandForm(BaseModelForm):
     class Meta:
         model = Command
+        exclude = ['active']
+
+
+class TimerConfigForm(BaseModelForm):
+    class Meta:
+        model = Config
+        fields = ['timers_interval']
+
+
+class TimerForm(BaseModelForm):
+    class Meta:
+        model = Timer
         exclude = ['active']
 
 

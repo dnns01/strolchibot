@@ -9,7 +9,7 @@ from twitchio import Channel, Message
 from twitchio.ext import commands
 from twitchio.ext.commands import Context
 
-import chat_commands, giveaway, klassenbuch, link_protection, spotify_cog, vote_cog, countdown, einkaufsliste
+import chat_commands, giveaway, klassenbuch, link_protection, spotify_cog, vote_cog, countdown, einkaufsliste, timers
 
 load_dotenv()
 
@@ -36,6 +36,7 @@ class StrolchiBot(commands.Bot, ABC):
         self.add_cog(chat_commands.Commands(self))
         self.add_cog(countdown.Countdown(self))
         self.add_cog(einkaufsliste.Einkaufsliste(self))
+        self.add_cog(timers.Timers(self))
 
     @staticmethod
     async def send_me(ctx, content):
@@ -60,6 +61,8 @@ class StrolchiBot(commands.Bot, ABC):
 
         if vote_cog := self.cogs.get("VoteCog"):
             vote_cog.manage_vote.start()
+        if timers := self.cogs.get("Timers"):
+            timers.timer_loop.start()
 
     @staticmethod
     def get_percentage(part, total):
@@ -76,7 +79,7 @@ class StrolchiBot(commands.Bot, ABC):
         return await self.get_chatters(self.CHANNEL)
 
     async def stream(self):
-        return await self.get_stream(self.CHANNEL)
+        return await self.fetch_streams(user_logins=[self.CHANNEL])
 
 
 bot = StrolchiBot()

@@ -47,6 +47,7 @@ class LinkBlacklist(models.Model):
 
 
 class Config(models.Model):
+    timers_interval = models.IntegerField(default=10, verbose_name="Interval")
     link_protection_active = models.BooleanField(default=True, verbose_name="Active")
     link_protection_permit_subs = models.BooleanField(default=True, verbose_name="Permit Subs")
     streamer = models.TextField(max_length=20, null=True)
